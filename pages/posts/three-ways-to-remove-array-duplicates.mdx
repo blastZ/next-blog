@@ -1,0 +1,107 @@
+import usePost from '../../hooks/usePost';
+
+export const frontMatter = {
+  slug: '/posts/three-ways-to-remove-array-duplicates',
+  title: '数组去重的三种方式',
+  subTitle: '数组去重的三种方式，相比于其他两种方式，filter 在性能方面更占优。',
+  tags: ['javascript'],
+  date: '2019/03/12',
+  thumb: '/static/thumbs/three-ways-to-remove-array-duplicates.svg',
+  published: false
+};
+
+export default usePost(frontMatter);
+
+# 数组去重的三种方式
+
+这是数组去重的三种方式，我个人偏向于使用 `filter` 的方式，它在性能方面更占优。
+
+```js
+const array = ['sheep', 1, 2, 'sheep', 'sheep', 3];
+
+// 1.Set
+[...new Set(array)];
+
+// 2.filter
+array.filter((o, index) => array.indexOf(o) === index);
+
+// 3.reduce
+array.reduce((result, current) => {
+  return result.indexOf(current) < 0 ? result.concat([current]) : result;
+}, []);
+
+// ['sheep', 1, 2, 3]
+```
+
+## 1.使用 Set
+
+先解释一下什么是 Set
+
+> Set 是 ES6 新增的一种数据对象，只允许保存唯一变量，当你将它传入一个数组时，它会移除所有重复的变量。
+
+使用 Set 去除重复变量分为两步
+
+1. 首先创建一个 Set ，并传入一个数组，由于 Set 只允许唯一变量，所有的重复项都会被移除。
+2. 现在所有重复性都被移除了，接着使用展开运算符 `...` 将 Set 转换会数组。
+
+```js
+const array = ['sheep', 1, 2, 'sheep', 'sheep', 3];
+
+// 第一步
+const uniqueSet = new Set(array);
+// Set { 'sheep', 1, 2, 3 }
+
+// 第二步
+const backToArray = [...uniqueSet];
+// ['sheep', 1, 2, 3]
+```
+
+## 2.使用 filter
+
+为了理解这种方式，先要了解这两个方法 `indexOf` 和 `filter`。
+
+### indexOf
+
+indexOf 方法会根据所提供的元素返回数组中第一个被找到相同元素的下标
+
+```js
+const array = ['sheep', 1, 2, 'sheep', 'sheep', 3];
+
+array.indexOf('sheep'); // 0
+array.indexOf(1); // 1
+array.indexOf(2); // 2
+array.indexOf(3); // 5
+```
+
+### filter
+
+`filter` 方法会根据我们给定的条件返回一个新的数组。换句话说就是，如果元素通过
+条件返回 `true`，它就会被包含在过滤后的数组中，返回 `false` 就不会包含在新的
+数组中。
+
+### 过滤重复项
+
+我们可以通过 `filter` 方法检索重复项并剔除它们，只需要将过滤条件设置为：
+
+```js
+const array = ['sheep', 1, 2, 'sheep', 'sheep', 3];
+
+array.filter((o, index) => array.indexOf(o) === index);
+// ['sheep', 1, 2, 3]
+```
+
+## 3.使用 reduce
+
+`reduce` 方法会根据传入的 `reducer` 函数重组数组内的元素。
+
+为了达到我们的目标，我们的 `reducer` 函数需要检查最终的数组中是否已经包含了当前元素，如果没有就加入，
+否则跳过当前元素。
+
+```js
+const array = ['sheep', 1, 2, 'sheep', 'sheep', 3];
+
+array.reduce((result, current) => {
+  return result.indexOf(current) < 0 ? result.concat([current]) : result;
+}, []);
+// ['sheep', 1, 2, 3]
+```

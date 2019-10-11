@@ -1,0 +1,30 @@
+import usePost from '../../hooks/usePost';
+
+export const frontMatter = {
+  slug: '/posts/css-selector-pseudo-element-and-class',
+  title: 'CSS 伪元素与伪类',
+  subTitle: '介绍伪元素和伪类区别，并说明如何在日常开发中使用它们。',
+  tags: ['css'],
+  date: '2019/03/12',
+  published: false
+};
+
+export default usePost(frontMatter);
+
+# CSS 伪元素与伪类
+
+## 伪元素（Pseudo Element）
+
+伪元素从名字就能知道，它不是真正的元素，但它的表现形式和真正的网页元素一样，也可以对其 `CSS` 进行控制。
+
+> 按照规范，表示伪元素时应使用两个冒号（::）来代替一个（:）。以此来区分伪元素和伪类。但是，在老版本的 `W3C` 声明中并不存在这个区分，所以大多数浏览器两种写法都支持。
+
+已被标准化的伪元素，其中带括号的表示两种写法都支持。
+
+- ::after（:after）
+- ::first-line（:first-line）
+- ::slotted
+- ::before（:before）
+- ::cue（:cue）
+- ::first-letter（:first-letter）
+- ::selection

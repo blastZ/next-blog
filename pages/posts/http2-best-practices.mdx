@@ -1,0 +1,111 @@
+import usePost from '../../hooks/usePost';
+
+export const frontMatter = {
+  slug: '/posts/http2-best-practices',
+  title: 'HTTP2 最佳实践',
+  subTitle: '从证书生产到 nginx 配置，完整实现 http2。',
+  tags: ['tcp/ip', 'linux'],
+  date: '2019/06/05',
+  thumb: 'https://res.cloudinary.com/stackbunch/image/upload/w_540,q_auto,c_fill/v1560448349/blog-thumb/http2-best-practices_mwestt.png',
+  published: true
+};
+
+export default usePost(frontMatter);
+
+# HTTP2 最佳实践
+
+本文将从 ssl 证书的申请和创建过程，到 nginx 的配置和优化来完整呈现 HTTP2 的配置过程以及它对比传统 HTTP/1.1 所带来的优势。
+
+## 创建根证书
+
+使用 HTTP2 的前提，是使用 HTTPS。而使用 HTTPS 需要申请 ssl 的证书。我们都知道证书的申请需要向 CA 发起证书签名请求（CSR)。而 CA 自己也有证明自己身份的证书，就是根证书。
+这里我们模拟 CA 来创建自己的根证书。
+
+在创建根证书之前，需要先创建私钥。
+
+```bash
+openssl genrsa -des3 -out root.key 4096
+```
+
+`-des3` 表示在输出私钥前对其进行加密，它是对称加密的一种，常见的还有 `aes128`，`aes256`，`camellia256` 等。
+`-out` 指定输出的文件名。
+`4096` 表示私钥的长度，也就是 512 个字节。
+
+创建完私钥后，我们用它来创建我们的根证书。
+
+```bash
+openssl req -x509 -new -key root.key -sha256 -days 365 -out root.crt
+```
+
+`-x509` 表示这是一份自签名证书。
+`-sha256` 表示摘要的签名算法，它是哈希算法的一种，常见的还有 `md5`, `sha3` 等。
+`-days` 表示证书有效时间。
+
+## 导入根证书
+
+创建完根证书后，需要将它导入到信任的根证书中，否则它会被视为不安全的证书。不同系统都内嵌了权威 CA 的根证书，修改的方式各不相同，最简单的打开 Chrome 浏览器 -> 设置 -> 高级 -> 证书管理，来直接
+导入证书。
+
+## 生产证书签名请求（CSR）
+
+现在我们已经是一个合法的 CA 了，如果我们要签发证书，需要别人向我们提交证书签名请求。假设现在有一台服务器需要申请 ssl 证书，那么同样的它需要有自己的私钥。所以我们先创建私钥。
+
+```bash
+openssl genrsa -out localhost.key 2048
+```
+
+创建完私钥后，就能用它创建 CSR 了，CSR 可以通过 openssl 如下命令直接生产。
+
+```bash
+openssl req -new -key localhost.key -out localhost.csr
+```
+
+但是我们需要用到额外的 SAN（subject alternative name）扩展来创建多域名证书，所以需要创建 config 来生成它。多域名证书的好处是可以用一份证书来保护多个域名，当然还因为
+[Chrome 从 58 之后只会从 SAN 扩展里匹配域名](https://support.google.com/chrome/a/answer/7391219?hl=en)。
+
+我们创建名为 `localhost.conf` 的文件，并写入以下内容：
+
+```bash
+[req]
+default_bits = 2048
+prompt = no
+default_md = sha256
+req_extensions = req_ext
+distinguished_name = dn
+[dn]
+C = HU
+ST = Budapest
+L = Budapest
+O = ACME
+OU = ACME Inc
+emailAddress = localhost@blastz.com
+CN = localhost
+[req_ext]
+subjectAltName = @alt_names
+[alt_names]
+DNS.1 = localhost
+```
+
+以前都是通过 CN（common name）来匹配域名。而在 SAN 中，通过 DNS.1 DNS.2 DNS.3 以此类推的方式来指定可用域名。
+
+然后我们使用它来创建我们的 CSR：
+
+```bash
+openssl req -new -config localhost.conf -key localhost.key -out localhost.csr
+```
+
+## 签发 SSL 证书
+
+作为 CA 在拿到 csr 文件之后，我们使用私钥和证书来签发 ssl 证书，由于要签发 SAN 证书，所以还需要额外指定 conf 文件。
+
+```bash
+openssl x509 \
+ -req -in localhost.csr \
+ -CA root.crt -CAkey root.key -CAcreateserial \
+ -out localhost.crt -days 365 -sha256 \
+ -extfile localhost.conf -extensions req_ext
+```
+
+## 配置 Nginx
+
+拿到签到的 `localhost.crt` 之后我们就可以通过它和 `localhost.key` 来配置 nginx 的 ssl 了。

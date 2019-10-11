@@ -1,0 +1,89 @@
+import usePost from '../../hooks/usePost';
+
+export const frontMatter = {
+  slug: '/posts/ecmascript-standard',
+  title: 'ECMAScript 标准',
+  subTitle: '介绍 ECMAScript 标准，以及在 TC39 发布流程下，各个阶段的意义。',
+  tags: ['javascript'],
+  date: '2019/05/15',
+  thumb: 'https://res.cloudinary.com/stackbunch/image/upload/w_540,q_auto,c_fill/v1560449319/blog-thumb/ecmascript-standard_zmscs9.jpg',
+  published: true
+};
+
+export default usePost(frontMatter);
+
+# ECMAScript 标准
+
+相信 `Babel` 大家都有用过，在 `v7` 之前，`Babel` 的 `preset` 里面有四个预置的阶段，分别是：
+
+- preset-stage-0
+- preset-stage-1
+- preset-stage-2
+- preset-stage-3
+
+如果没有了解过 `ECMAScript` 标准的话，看到这四个阶段估计是一脸懵逼的，其实这是 ECMAScript 新功能发布过程中所经历的四个阶段，下面我们来详细介绍下。
+
+## 标准化
+
+`JavaScript` 主要有两个标准
+
+- ECMA-262 由 Ecma International 发起，是主要标准。
+- ISO/IEC 16262 由国际标准化组织（International Organization for Standardization）简称 ISO 发起，是次要标准。
+
+被这两个标准所描述的语言称为 `ECMAScript`，而不是 `JavaScript`。换个新名字的原因也很简单，因为 Sun 公司注册了 JavaScript 的商标。
+
+新名字里的 ECMA 来源于发起这个标准的组织，最早叫欧洲电脑制造商协会（European Computer Manufacturers Association），后来为了国际化改名叫 Ecma International 。
+所以 Ecma 现在是作为一个特定名词的，而不再是缩写。
+
+原则上来说 ECMAScript 和 JavaScript 就是一个东西，不过大多数情况下都会做如下区分：
+
+- JavaScript 指代这门语言和它的实现
+- ECMAScript 指代这门语言的标准和版本
+
+所以网上常说的 ES6 就是 ECMAScript6 也就是 JS 的第六个版本。
+
+## Ecma Technical Committee 39 （TC39）
+
+Ecma 技术委员会，简称 TC39，致力于发展 JavaScript。成员有我们非常熟悉的 Adobe，苹果，Facebook，谷歌，巨硬，Mozilla，Opera，Twitter 等。
+
+基本每两个月开一次会，会议内容可以在这个 [repo](https://github.com/tc39/tc39-notes/) 下看到。
+
+## ES 标准的发布过程
+
+在 ES6 发布之后，发布过程中存在着两个比较明显的问题，分别是：
+
+- 如果两个发布版本之间隔的时间太长，早就写好的功能需要很长时间才能发布，还没写好的也有可能被截止日期推着上线。
+- 一个功能被设计好后，在很长一段时间后才会被实现和使用，因此当发现这个功能的实现有缺陷时，已经为时过晚。
+
+为了应对这些问题，TC39 制定了新的发布流程，也就是 TC39 process。流程如下：
+
+- ECMAScript 的新功能各自被独立设计并进入相应的阶段，从 0（‘strawman’）的提出想法开始，到 4（‘finished’）的准备标准化结束。
+- 特别是后面几个阶段需要原型实现和上线测试，达到设计和实现之间的相互反馈。
+- ECMAScript 版本每年发布一次，包含所有在截止日之前到达阶段 4 的功能。
+
+值得注意的是 ES6 是第一个官方用发布年来命名的版本，从 ES6 开始到现在 2019 年 5 月，发布的时间线如下：
+
+- ECMAScript 6（2015.6）：官方命名为 ESMAScript2015，可能因为之前都是 1，2，3，4，5 这么走过来的，所以大家更习惯叫 ES6。
+- ECMAScript 2016（2016.6）：第一次按年发布。
+- ECMAScript 2017（2017.6）：第二次按年发布。
+- ECMAScript 2018（2018.6）：随后的版本都会在每年的 6 月份发布。
+
+回到发布流程，完整的过程如下图所示。
+
+<img src="/static/posts/ecmascript-standard/tc39_process.webp" />
+
+ES2016 是根据 TC39 流程设计的第一个版本，也就是 ES6（ES2015）紧接的那一个版本。
+
+在 ES6 之前包括 ES6，大家可能会关系浏览器是否支持 ES6。但根据新的 TC39 流程，也就是 ES2016 开始，更多关心的应该是单独的功能，而不再是版本。
+只要一个功能进入了 stage 4，你就可以安全的使用它，不必等到新的 ES 版本发布。
+
+## 补充说明
+
+- 如果你想知道新提出的功能现在进入那个阶段了，可以关注这个 [repo](https://github.com/tc39/proposals)。
+  其中不仅包含了新的功能，也包含了已经完成功能的完整列表。
+
+- 文章大块内容节选自 [JavaScript for impatient programmers - History and evolution of JavaScript](http://exploringjs.com/impatient-js/ch_history.html)。
+
+- Babel v7 为什么弃用了所有的 stage-preset ？ 详情可以看官方的博客 [removing-babels-stage-presets](https://babeljs.io/blog/2018/07/27/removing-babels-stage-presets)。
+  简单概括下就是，很多人并不理解 stage 各个阶段代表着什么，就是简单把 stage-0 加入到 babel config 里，然后开始用新功能，这导致了许多问题。比如某个功能的 stage 发生了改变，或者被弃用了的时候，
+  原先的配置和写法就会产生错误的结果。

@@ -1,0 +1,148 @@
+import usePost from '../../hooks/usePost';
+
+export const frontMatter = {
+  slug: '/posts/ssh-detail',
+  title: 'SSH 详解',
+  subTitle: '从证书生产到 nginx 配置，完整实现 http2。',
+  tags: ['tcp/ip', 'linux'],
+  date: '2019/06/05',
+  thumb: 'https://res.cloudinary.com/stackbunch/image/upload/w_540,q_auto,c_fill/v1560448899/blog-thumb/ssh-detail_auehbc.jpg',
+  published: true
+};
+
+export default usePost(frontMatter);
+
+# SSH 详解
+
+SSH（Secure Shell）是一种远程管理协议，允许用户通过网络来控制和修改他们的远程服务器。它的出现用于代替 telnet 等明文传输，保证与服务器之间的通信安全。
+
+## SSH 的使用方法
+
+SSH 的基本命令如下：
+
+```bash
+ssh user@host
+```
+
+`user` 表示你想连接的用户，`host` 表示远程主机，可以是 IP 地址，也可以是域名。
+
+## 建立 SSH 连接
+
+SSH 的连接分为三个阶段，传输阶段，认证阶段和会话阶段。
+
+### 传输阶段
+
+客户端向服务器发起 TCP 请求。三次握手后，客户端发送自己的 SSH 协议版本，同时服务器返回自己的 SSH 协议版本。
+服务器比较双方 SSH 协议版本，决定是否达成协商。失败则结束 TCP 连接，终止会话。
+
+成功协商版本号后，双方要继续协商会话过程中所使用的加密算法，双方分别向对方发送支持的加密算法列表（密钥交换算法，服务器主机密钥算法，对称加密算法，MAC 算法，压缩算法等）。
+协商成功后，产生一个对称密钥作为会话密钥和一个会话 ID，它们用来对之后的所有会话进行加密（SSHv2 使用 DH 密钥交换算法产生会话密钥，详见补充说明）。
+
+在建立连接的过程中，服务器会向客户端发送自己的公钥，服务器的公钥一般保存在 `/etc/ssh` 下，大多数云服务器会内置多种加密算法产生的公钥。一般包含以下四种：
+
+- ssh_host_rsa_key.pub
+- ssh_host_dsa_key.pub
+- ssh_host_ecdsa_key.pub
+- ssh_host_ed25519_key.pub
+
+这四种类型也是 `ssh-keygen` 能够生成的四种非对称密钥的类型。
+
+如果是第一次连接远程服务器，那么在最后正式确立连接之前，会跳出一条我们经常忽略的提示：
+
+```bash
+The authenticity of host '159.65.9.118 (159.65.9.118)' can't be established.
+ECDSA key fingerprint is SHA256:iTuve8WMU2oKqEyLkM4Y56T+l1aueJePrbHK/w7kVDI.
+Are you sure you want to continue connecting (yes/no)?
+
+```
+
+表示无法确认远程主机的真实性，其中提供了该服务器公钥的指纹签名，而且说明使用了 sha256 签名算法，并询问你是否继续连接。
+
+一旦选择 yes，就会给出以下警告：
+
+```bash
+Warning: Permanently added '159.65.9.118' (ECDSA) to the list of known hosts.
+```
+
+这表示主机的公钥信息已保存到客户端的 `~/.ssh/known_hosts` 下，下次登陆就不会再询问了。但是如果远程主机给出的指纹和本地保存的指纹不相同,
+此时会再次给出新的指纹，并询问是否继续连接。如果选择 yes，那么新的主机信息会加入到 `known_hosts` 下，这会导致 `known_hosts` 下存在两条同一个 IP 的指纹信息。
+
+Mac 和 Linux 默认的存储稍有不同，Mac 下默认不开启哈希存储，linux 下默认开启，可以通过 `/etc/ssh/ssh_config` 下的 `HashKnownHosts` 配置项修改这种行为，其结果如下：
+
+```bash
+# Mac
+159.65.9.118 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBKGFHJRd3MZaUA0FYOlLsNMrNDz1aACZRQw8xZhp1mzAvFKxwDCRooIbsfZ7soZRMQAXUDQGj8nIbfq2cjgNnPQ=
+
+# Linux
+|1|jrftXKpCIHFE2Id5pKgGvVZmfm0=|EGVY1Q/k+ElWrrUyllf6thPch34= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBKGFHJRd3MZaUA0FYOlLsNMrNDz1aACZRQw8xZhp1mzAvFKxwDCRooIbsfZ7soZRMQAXUDQGj8nIbfq2cjgNnPQ=
+
+```
+
+对 IP 地址做散列存储，主要目的在于服务器被攻破后提供尽量少的信息给攻击者。
+
+同时注意到远程服务器向我们提供的是 `ecdsa` 的公钥，一般使用最多的是 `rsa` 算法产生的公钥，但其实安全和性能最好的是 `ed25519` 算法产生的公私钥对。
+
+`ssh-keygen` 可以指定产生的密钥对类型，方法如下：
+
+```bash
+ssh-keygen -t ed25519
+```
+
+每个用户都有自己的 `known_hosts` ，所以上面所提到的所有地址的一级目录都是 `~` 家目录。系统也有适用于全局的 `known_hosts` 通常位于 `/etc/ssh` 下。
+
+### 认证阶段
+
+_认证阶段的所有内容都会经过传输阶段产生的对称密钥加密，下面不再复述。_
+
+客户端验证登陆有两种方式：
+
+#### 1.基于账号和密令的认证方式
+
+客户端使用服务器公钥对账户和密令进行加密，服务器接收到加密的密令后使用私钥解密，如果用户和其对应的密令正确，则登陆成功。
+
+#### 2.基于公钥和私钥的认证方式
+
+使用这种方式的前提，需要将本地 `ssh-keygen` 生成的公钥粘贴到服务器 `~/.ssh` 下的 `authorized_keys` 中，如下所示：
+
+```bash
+# ~/.ssh/authorized_keys
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOCyankvetijAkSCZ0matlTKWEckvjnHfM0eYVgX4AG8
+```
+
+客户端向服务器发送公钥，服务在 `authorized_keys` 中找到对应公钥，则发起质询，用公钥加密一段字串，返回给客户端。
+客户端使用私钥解密后将字串返回给服务器，验证字串一致性，一致则登陆成功。
+
+### 会话阶段
+
+会话阶段即客户端与服务器之间进行信息的传递，其所有内容经过传输阶段的会话密钥加密。
+
+## 补充说明
+
+### 1.中间人攻击
+
+我们知道在 HTTPS 协议下，为了应对“中间人攻击”（Man-in-the-middle attack），服务器会向客户端提供证书来验证自己的身份。但 SSH 协议并不存在证书，这会带来风险。
+
+所以为了确认远程主机的身份，我们需要确认第一次登陆服务器时显示的服务器公钥指纹，至于如何去确认指纹的正确性，只能人工确认。一般分两种情况：
+
+1. 能够直接登陆服务器的，只需要到 `/etc/ssh` 目录下确认主机公钥即可。
+2. 无法直接登陆服务器的，只能通过远程主机公开的密钥来确认了。
+
+### 2.DH 密钥交换算法
+
+DH 的基本思路是，双方在密钥交换的过程中并不共享任何密钥信息，而是双方共同在创建密钥。简化的过程如下：
+
+1. 甲选取两个素数 g 和 p 并告诉乙。
+2. 乙选取一个只有自己知道的数字 a，计算 g\*\*a % p，结果为 A，返回给甲。
+3. 甲做相同的事，选取一个只有自己知道的数字 b，计算 g\*\*b % p，结果为 B，返回给乙。
+4. 乙拿到 B 后计算 B\*\*a % p，结果为 X。
+5. 步骤三中甲拿到 A 后计算 A\*\*b % p，得到的结果 Y 与第四步的 X 相同。
+
+到这里双方拥有共享的密钥 K == X == Y。实现这一方法的基本原理数学原理如下：
+
+```js
+// 使用 js 计算符
+(g ** a % p) ** b % p = g**(a * b) % p;
+(g ** b % p) ** a % p = g**(b * a) % p;
+```
+
+注意的是 DH 密钥交换算法只是保证双方共享密钥的唯一，并不能应对中间人攻击。

@@ -1,0 +1,53 @@
+import usePost from '../../hooks/usePost';
+
+export const frontMatter = {
+  slug: '/posts/font-face',
+  title: '网页字体的设定',
+  subTitle: '通过 @font-facce 指定自定义的字体，并对显示方式和字体文件进行优化。',
+  tags: ['css'],
+  date: '2019/05/20',
+  thumb: '/static/thumbs/font-face.svg',
+  published: false
+};
+
+export default usePost(frontMatter);
+
+# 网页字体设置
+
+说到网页字体的设置大多数情况下都会使用以下方案指定一套字体的套用顺序
+
+```css
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+}
+```
+
+使用系统预设的字体，自然是最快，最省资源的方式。但是对于中文字体来说，为了追求美观，系统预设往往是不够突出的。
+
+## @font-face
+
+`@font-face` 作为 css 的 `at-rule` 中的一个，用来指定一个用于显示文本的自定义字体，可以来自远程服务器也可以来自用户本地安装的字体。
+如果指定了 `local()` 函数，那么它将先从用户本地查找指定的字体，如果找到了就使用本地字体，没找到的话，再使用 `url()` 函数从远程服务器下载字体并使用。
+用法如下：
+
+```css
+@font-face {
+  font-family: 'CoolFont';
+  src: local('CoolFont'), url('/static/fonts/cool-font.woff2'), url('/static/fonts/cool-font.woff');
+}
+```
+
+## 避免不可见文本
+
+为了避免在字体文件下载过程中，出现不可见文本的情况，我们还需要一些额外的配置。
+
+### 1.使用 font-display
+
+在我们的 `@font-face` 中加入以下属性：
+
+```css
+@font-face {
+  font-family: 'CoolFont';
+  font-display: swap;
+}
+```
