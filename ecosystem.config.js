@@ -14,7 +14,7 @@ module.exports = {
   deploy: {
     production: {
       user: 'root',
-      host: ['178.128.52.85'],
+      host: ['157.245.197.68'],
       ref: 'origin/master',
       repo: 'git@github.com:blastZ/next-blog.git',
       path: '/home/blog',
