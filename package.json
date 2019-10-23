@@ -30,5 +30,8 @@
     "typography-theme-alton": "^0.16.19"
   },
   "author": "blastz",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "babel-plugin-preval": "^3.0.1"
+  }
 }

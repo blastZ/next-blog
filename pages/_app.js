@@ -5,6 +5,7 @@ import { ThemeProvider, makeStyles } from '@material-ui/styles';
 
 import theme from '../src/theme';
 import Progress from '../components/Progress';
+import { getPostList } from '../utils/post-list';
 
 class MyApp extends App {
   componentDidMount() {
@@ -14,8 +15,14 @@ class MyApp extends App {
     }
   }
 
+  static async getInitialProps(appContext) {
+    const posts = await getPostList();
+
+    return { posts };
+  }
+
   render() {
-    const { Component, pageProps } = this.props;
+    const { Component, pageProps, posts } = this.props;
 
     return (
       <>
@@ -25,7 +32,7 @@ class MyApp extends App {
         <ThemeProvider theme={theme}>
           <Progress />
           <Container>
-            <Component {...pageProps} />
+            <Component {...pageProps} posts={posts} />
           </Container>
         </ThemeProvider>
       </>

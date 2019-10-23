@@ -8,11 +8,10 @@ import CategoryIcon from '@material-ui/icons/Category';
 import Layout from '../components/Layout';
 import PostCard from '../components/PostCard';
 import PageButton from '../components/PageButton';
-import posts from '../data/posts';
 import Typography from '@material-ui/core/Typography';
 import Category from '../components/Category';
 
-export default () => {
+export default ({ posts = [] }) => {
   const [categoryButtonAnchor, setCategoryButtonAnchor] = useState(null);
   const [category, setCategory] = useState('all');
   const [page, setPage] = useState(0);
