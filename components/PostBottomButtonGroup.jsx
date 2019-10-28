@@ -32,7 +32,7 @@ export default () => {
 
 const useStyles = makeStyles(() => ({
   container: {
-    margin: '160px 0px 64px 0px'
+    margin: '88px 0px 64px 0px'
   },
   backButton: {
     padding: 32,

@@ -50,25 +50,8 @@ export default ({ posts = [] }) => {
   return (
     <>
       <Layout>
-        <Grid style={{ marginTop: 64 }} container wrap="nowrap" direction="column" alignItems="center">
-          <Grid item>
-            <Typography variant="h3">Blog</Typography>
-          </Grid>
-          <Grid className={classes.slogan} item>
-            <Typography variant="h6">{`Share Everything 📖, Front-End, Back-End, Data Visualization, Linux.`}</Typography>
-          </Grid>
-          <Grid className={classes.posts} item container>
-            <Grid item container direction="column" wrap="nowrap" spacing={6}>
-              {showPosts.map(({ id, thumb, title, tags, date, subTitle, slug }) => (
-                <Grid className={classes.cardContainer} key={slug} item>
-                  <PostCard id={id} data={{ thumb, title, tags, slug, date, subTitle }} changeCategory={changeCategory} />
-                </Grid>
-              ))}
-            </Grid>
-            <Divider light />
-            <PageButton page={page} pageSize={pageSize} length={showPosts.length} />
-          </Grid>
-        </Grid>
+        <Slogan classes={classes} />
+        <Posts classes={classes} showPosts={showPosts} changeCategory={changeCategory} page={page} pageSize={pageSize} />
         <Fab onClick={openCategoryMenu} variant="extended" aria-label="delete" className={classes.category}>
           <CategoryIcon />
         </Fab>
@@ -78,21 +61,51 @@ export default ({ posts = [] }) => {
   );
 };
 
+const Slogan = ({ classes }) => (
+  <Grid className={classes.slogan} item container direction="column" alignItems="center" spacing={3}>
+    <Grid item>
+      <Typography variant="h3">Blog</Typography>
+    </Grid>
+    <Grid item>
+      <Typography variant="h6">{`Share Everything 📖, Front-End, Back-End, Data Visualization, Linux.`}</Typography>
+    </Grid>
+  </Grid>
+);
+
+const Posts = ({ classes, showPosts, changeCategory, page, pageSize }) => (
+  <Grid className={classes.posts} item container wrap="nowrap" direction="column" alignItems="center" spacing={6}>
+    {showPosts.map(({ id, thumb, title, tags, date, subTitle, slug }) => (
+      <Grid key={slug} item>
+        <PostCard id={id} data={{ thumb, title, tags, slug, date, subTitle }} changeCategory={changeCategory} />
+      </Grid>
+    ))}
+    <Grid item>
+      <Divider lightf />
+    </Grid>
+    <Grid item container>
+      <PageButton page={page} pageSize={pageSize} length={showPosts.length} />
+    </Grid>
+  </Grid>
+);
+
 const useStyles = makeStyles(theme => ({
   slogan: {
-    padding: '24px 48px',
+    marginTop: 56,
+    paddingLeft: 48,
+    paddingRight: 48,
     textAlign: 'center'
   },
   posts: {
     [theme.breakpoints.up('md')]: {
       width: '90%'
     },
-    padding: '16px 32px 0px 32px',
-    margin: '48px 0px',
-    minHeight: 400
-  },
-  cardContainer: {
-    width: '100%'
+    padding: 16,
+    margin: '0px auto',
+    marginTop: 48,
+    minHeight: 400,
+    '& > div': {
+      width: '100%'
+    }
   },
   category: {
     opacity: ({ showCategoryButton }) => (showCategoryButton ? '1' : '0'),

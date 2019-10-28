@@ -82,8 +82,7 @@ const useStyles = makeStyles(theme => ({
   readButton: {
     position: 'absolute',
     right: 16,
-    bottom: 16,
-    borderRadius: '1px'
+    bottom: 16
   },
   title: {
     color: '#555555',
