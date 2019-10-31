@@ -2,6 +2,7 @@ import React from 'react';
 import Layout from '../components/Layout';
 import { makeStyles } from '@material-ui/core/styles';
 import { MDXProvider } from '@mdx-js/react';
+import Grid from '@material-ui/core/Grid';
 
 import Highlight from './Highlight';
 
@@ -62,22 +63,27 @@ export default ({ frontMatter, children }) => {
   return (
     <MDXProvider components={components}>
       <Layout>
-        <div className={classes.container}>
-          <h1 className={classes.title}>{title}</h1>
-          <h4 className={classes.subTitle}>
-            <span className={classes.date}>{`${date} - `}</span>
-            <a className={classes.editLink} target="_blank" href={`https://github.com/blastZ/next-blog/blob/master/pages${slug}.mdx`}>
-              EDIT THIS POST ON GITHUB
-            </a>
-          </h4>
-          <div className={classes.content}>{children}</div>
-        </div>
+        <Grid item className={classes.wrapGrid}>
+          <div className={classes.container}>
+            <h1 className={classes.title}>{title}</h1>
+            <h4 className={classes.subTitle}>
+              <span className={classes.date}>{`${date} - `}</span>
+              <a className={classes.editLink} target="_blank" href={`https://github.com/blastZ/next-blog/blob/master/pages${slug}.mdx`}>
+                EDIT THIS POST ON GITHUB
+              </a>
+            </h4>
+            <div className={classes.content}>{children}</div>
+          </div>
+        </Grid>
       </Layout>
     </MDXProvider>
   );
 };
 
 const useStyles = makeStyles(theme => ({
+  wrapGrid: {
+    width: '100%'
+  },
   container: {
     [theme.breakpoints.down('md')]: {
       paddingLeft: 20,
@@ -90,7 +96,7 @@ const useStyles = makeStyles(theme => ({
       width: '66.66666667%',
       marginLeft: '16.66666667%'
     },
-    marginTop: 96
+    marginTop: 64
   },
   title: {
     textAlign: 'center'

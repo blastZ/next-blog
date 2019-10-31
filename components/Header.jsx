@@ -5,6 +5,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { useRouter } from 'next/router';
+import Grid from '@material-ui/core/Grid';
 
 const Header = () => {
   const router = useRouter();
@@ -21,17 +22,31 @@ const Header = () => {
     <div className={classes.root}>
       <AppBar elevation={1} className={classes.appBar} position="fixed">
         <Toolbar className={classes.toolBar}>
-          <Typography variant="h6" color="inherit" className={classes.grow}>
-            StackBunch
-          </Typography>
+          <Grid container className={classes.grow} alignItems="center" wrap="nowrap">
+            <Grid item>
+              <img style={{ flexShrink: 0, width: 30, margin: 0, marginRight: 8, marginBottom: -4 }} src="/favicon.png" />
+            </Grid>
+            <Grid item>
+              <Typography variant="h6" color="inherit">
+                StackBunch
+              </Typography>
+            </Grid>
+          </Grid>
+
           <LinkButton primary isIndex={isIndex} onClick={handleClick}>
-            BLOG
+            <Typography variant="subtitle2" color="inherit">
+              BLOG
+            </Typography>
           </LinkButton>
           <LinkButton isIndex={isIndex} disabled>
-            CASE
+            <Typography variant="subtitle2" color="inherit">
+              CASE
+            </Typography>
           </LinkButton>
           <LinkButton isIndex={isIndex} primary={true} disabled>
-            ABOUT
+            <Typography variant="subtitle2" color="inherit">
+              ABOUT
+            </Typography>
           </LinkButton>
         </Toolbar>
       </AppBar>
@@ -63,11 +78,7 @@ const useStyles = makeStyles(theme => ({
     paddingRight: `0px !important`
   },
   toolBar: {
-    [theme.breakpoints.up('xxl')]: {
-      width: 1334,
-      margin: '0 auto',
-      padding: 0
-    }
+    padding: '0 24px'
   },
   toolbarButton: {
     marginLeft: -12,
