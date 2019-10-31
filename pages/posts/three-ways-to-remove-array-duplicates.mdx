@@ -3,21 +3,22 @@ import usePost from '../../hooks/usePost';
 export const frontMatter = {
   slug: '/posts/three-ways-to-remove-array-duplicates',
   title: '数组去重的三种方式',
-  subTitle: '数组去重的三种方式，相比于其他两种方式，filter 在性能方面更占优。',
+  subTitle: '使用 Set，Array.filter，Array.reduce 三种方式对数组进行简单快捷的去重。',
   tags: ['javascript'],
   date: '2019/03/12',
-  thumb: '/static/thumbs/three-ways-to-remove-array-duplicates.svg',
-  published: false
+  thumb:
+    'https://res.cloudinary.com/stackbunch/image/upload/w_540,q_auto,c_fill/v1572535167/blog-thumb/three-ways-to-remove-array-duplicates_ez2ujr.png',
+  published: true
 };
 
 export default usePost(frontMatter);
 
 # 数组去重的三种方式
 
-这是数组去重的三种方式，我个人偏向于使用 `filter` 的方式，它在性能方面更占优。
+先展示下这三种方式，下面再对它们进行详细的解释。
 
 ```js
-const array = ['sheep', 1, 2, 'sheep', 'sheep', 3];
+const array = ['🍧', 1, 2, '🍧', '🍧', 3];
 
 // 1.Set
 [...new Set(array)];
@@ -30,7 +31,7 @@ array.reduce((result, current) => {
   return result.indexOf(current) < 0 ? result.concat([current]) : result;
 }, []);
 
-// ['sheep', 1, 2, 3]
+// ['🍧', 1, 2, 3]
 ```
 
 ## 1.使用 Set
@@ -42,32 +43,32 @@ array.reduce((result, current) => {
 使用 Set 去除重复变量分为两步
 
 1. 首先创建一个 Set ，并传入一个数组，由于 Set 只允许唯一变量，所有的重复项都会被移除。
-2. 现在所有重复性都被移除了，接着使用展开运算符 `...` 将 Set 转换会数组。
+2. 现在所有重复性都被移除了，接着使用展开运算符【`...`】将 Set 转换会数组。
 
 ```js
-const array = ['sheep', 1, 2, 'sheep', 'sheep', 3];
+const array = ['🍧', 1, 2, '🍧', '🍧', 3];
 
 // 第一步
 const uniqueSet = new Set(array);
-// Set { 'sheep', 1, 2, 3 }
+// Set { '🍧', 1, 2, 3 }
 
 // 第二步
 const backToArray = [...uniqueSet];
-// ['sheep', 1, 2, 3]
+// ['🍧', 1, 2, 3]
 ```
 
 ## 2.使用 filter
 
-为了理解这种方式，先要了解这两个方法 `indexOf` 和 `filter`。
+使用 filter 前，先了解下 `indexOf` 和 `filter` 这两个方法。
 
 ### indexOf
 
-indexOf 方法会根据所提供的元素返回数组中第一个被找到相同元素的下标
+indexOf 方法会根据所提供的元素返回数组中第一个被找到的相同元素的下标
 
 ```js
-const array = ['sheep', 1, 2, 'sheep', 'sheep', 3];
+const array = ['🍧', 1, 2, '🍧', '🍧', 3];
 
-array.indexOf('sheep'); // 0
+array.indexOf('🍧'); // 0
 array.indexOf(1); // 1
 array.indexOf(2); // 2
 array.indexOf(3); // 5
@@ -84,10 +85,10 @@ array.indexOf(3); // 5
 我们可以通过 `filter` 方法检索重复项并剔除它们，只需要将过滤条件设置为：
 
 ```js
-const array = ['sheep', 1, 2, 'sheep', 'sheep', 3];
+const array = ['🍧', 1, 2, '🍧', '🍧', 3];
 
 array.filter((o, index) => array.indexOf(o) === index);
-// ['sheep', 1, 2, 3]
+// ['🍧', 1, 2, 3]
 ```
 
 ## 3.使用 reduce
@@ -98,10 +99,21 @@ array.filter((o, index) => array.indexOf(o) === index);
 否则跳过当前元素。
 
 ```js
-const array = ['sheep', 1, 2, 'sheep', 'sheep', 3];
+const array = ['🍧', 1, 2, '🍧', '🍧', 3];
 
 array.reduce((result, current) => {
   return result.indexOf(current) < 0 ? result.concat([current]) : result;
 }, []);
-// ['sheep', 1, 2, 3]
+// 1.['🍧']
+// 2.['🍧', 1]
+// 3.['🍧', 1, 2]
+// 4.['🍧', 1, 2]
+// 5.['🍧', 1, 2]
+// 6.['🍧', 1, 2, 3]
 ```
+
+从执行的六次返回的结果来看，并不难理解 `reduce` 的实现方式。
+
+## 补充说明
+
+文章内容基本来源于 [How to Remove Array Duplicates in ES6](https://medium.com/dailyjs/how-to-remove-array-duplicates-in-es6-5daa8789641c)
