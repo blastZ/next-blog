@@ -23,21 +23,21 @@ const PostCard = ({ data: { title, date, tags, slug, subTitle, thumb }, changeCa
             {title}
           </Link>
         </NextLink>
-        <Grid className={classes.infoContainer} container justify="space-between">
+        <Grid className={classes.infoContainer} container justify="space-between" wrap="nowrap">
           <Grid item>
-            IN{' '}
-            <Link onClick={() => changeCategory(tags[0] || '')} className={classes.category}>
-              {tags[0].toUpperCase() || ''}
+            IN
+            <Link onClick={() => changeCategory(tags[0])} className={classes.category}>
+              {tags[0].toUpperCase()}
             </Link>
           </Grid>
           <Grid item>
-            <Grid container alignItems="center">
-              <CalendarIcon style={{ width: '0.6em', marginRight: 8 }} />
-              {date}
-            </Grid>
+            <CalendarIcon className={classes.calendarIcon} />
+            {date}
           </Grid>
         </Grid>
-        <Typography className={classes.subTitle}>{subTitle}</Typography>
+        <Typography variant="subtitle1" className={classes.subTitle}>
+          {subTitle}
+        </Typography>
         <NextLink href={slug}>
           <Button color="primary" className={classes.readButton} variant="outlined">
             Read
@@ -54,6 +54,9 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     height: 480,
+    '&:hover': {
+      boxShadow: `0 2px 4px -1px rgba(0,0,0,0.2), 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12)`
+    },
     [theme.breakpoints.up('lg')]: {
       height: 240,
       flexDirection: 'row'
@@ -72,11 +75,15 @@ const useStyles = makeStyles(theme => ({
       width: 320
     }
   },
+  calendarIcon: {
+    fontSize: '1em',
+    marginRight: 4,
+    marginBottom: -1
+  },
   content: {
     width: '100%'
   },
   subTitle: {
-    fontSize: 18,
     color: '#5f6368'
   },
   readButton: {

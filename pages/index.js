@@ -80,7 +80,7 @@ const Posts = ({ classes, showPosts, changeCategory, page, pageSize }) => (
       </Grid>
     ))}
     <Grid item>
-      <Divider lightf />
+      <Divider />
     </Grid>
     <Grid item container>
       <PageButton page={page} pageSize={pageSize} length={showPosts.length} />
