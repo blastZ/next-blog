@@ -11,7 +11,7 @@ import PageButton from '../components/PageButton';
 import Typography from '@material-ui/core/Typography';
 import Category from '../components/Category';
 
-export default ({ posts = [] }) => {
+export default ({ posts = [], categories = { all: 0 } }) => {
   const [categoryButtonAnchor, setCategoryButtonAnchor] = useState(null);
   const [category, setCategory] = useState('all');
   const [page, setPage] = useState(0);
@@ -42,8 +42,7 @@ export default ({ posts = [] }) => {
 
   const showPosts = useMemo(() => {
     return posts
-      .filter(o => o.published && ((category !== 'all' && o.tags.includes(category)) || category === 'all'))
-      .sort((a, b) => new Date(b.date) - new Date(a.date))
+      .filter(o => (category !== 'all' && o.tags.includes(category)) || category === 'all')
       .slice(page * pageSize, page * pageSize + pageSize);
   }, [posts, category, page, pageSize]);
 
@@ -55,7 +54,12 @@ export default ({ posts = [] }) => {
         <Fab onClick={openCategoryMenu} variant="extended" aria-label="delete" className={classes.category}>
           <CategoryIcon />
         </Fab>
-        <Category handleClose={closeCategoryMenu} anchorEle={categoryButtonAnchor} changeCategory={changeCategory} />
+        <Category
+          categories={categories}
+          handleClose={closeCategoryMenu}
+          anchorEle={categoryButtonAnchor}
+          changeCategory={changeCategory}
+        />
       </Layout>
     </>
   );

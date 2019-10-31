@@ -12,5 +12,5 @@ export const getPostList = async () => {
     return frontMatter;
   });
 
-  return posts.filter(o => o);
+  return posts.filter(o => o && o.published).sort((a, b) => new Date(b.date) - new Date(a.date));
 };

@@ -17,12 +17,21 @@ class MyApp extends App {
 
   static async getInitialProps(appContext) {
     const posts = await getPostList();
+    const categories = posts.reduce((result, current) => {
+      current.tags.map(tag => {
+        result[tag] ? (result[tag] += 1) : (result[tag] = 1);
+      });
 
-    return { posts };
+      return result;
+    }, {});
+
+    categories['all'] = posts.length;
+
+    return { posts, categories };
   }
 
   render() {
-    const { Component, pageProps, posts } = this.props;
+    const { Component, pageProps, posts, categories } = this.props;
 
     return (
       <>
@@ -32,7 +41,7 @@ class MyApp extends App {
         <ThemeProvider theme={theme}>
           <Progress />
           <Container>
-            <Component {...pageProps} posts={posts} />
+            <Component {...pageProps} posts={posts} categories={categories} />
           </Container>
         </ThemeProvider>
       </>
