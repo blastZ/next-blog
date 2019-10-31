@@ -9,8 +9,11 @@ import CalendarIcon from '@material-ui/icons/CalendarTodayOutlined';
 import Link from '@material-ui/core/Link';
 import NextLink from 'next/link';
 
-const PostCard = ({ data: { title, date, tags, slug, subTitle, thumb }, changeCategory }) => {
+import useApp from '../hooks/useApp';
+
+const PostCard = ({ data: { title, date, tags, slug, subTitle, thumb } }) => {
   const classes = useStyles();
+  const { setCategory } = useApp();
 
   return (
     <Card className={classes.card}>
@@ -26,7 +29,7 @@ const PostCard = ({ data: { title, date, tags, slug, subTitle, thumb }, changeCa
         <Grid className={classes.infoContainer} container justify="space-between" wrap="nowrap">
           <Grid item>
             IN
-            <Link onClick={() => changeCategory(tags[0])} className={classes.category}>
+            <Link onClick={setCategory(tags[0])} className={classes.category}>
               {tags[0].toUpperCase()}
             </Link>
           </Grid>

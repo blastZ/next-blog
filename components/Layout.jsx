@@ -7,11 +7,11 @@ import Footer from './Footer';
 import AboutMe from './AboutMe';
 import PostBottomButtonGroup from './PostBottomButtonGroup';
 
-const Layout = ({ children }) => {
+const Layout = props => {
   return (
     <>
-      <Header siteTitle={'Stack Bunch'} />
-      <Main>{children}</Main>
+      <Header />
+      <Main {...props} />
       <PostBottomButtonGroup />
       <Divider />
       <AboutMe />

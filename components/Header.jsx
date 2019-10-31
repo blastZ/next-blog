@@ -1,22 +1,24 @@
-import React, { useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { useRouter } from 'next/router';
 import Grid from '@material-ui/core/Grid';
+import MenuIcon from '@material-ui/icons/Menu';
+import IconButton from '@material-ui/core/IconButton';
+
+import Menu from './Menu';
 
 const Header = () => {
-  const router = useRouter();
-  const isIndex = router.route === '/';
-  const classes = useStyles({
-    isIndex
-  });
+  const [showMenu, setShowMenu] = useState(false);
+  const classes = useStyles();
 
-  const handleClick = useCallback(() => {
-    router.push('/');
-  }, []);
+  const toggleMenu = useCallback(
+    show => () => {
+      setShowMenu(show);
+    },
+    []
+  );
 
   return (
     <div className={classes.root}>
@@ -24,7 +26,7 @@ const Header = () => {
         <Toolbar className={classes.toolBar}>
           <Grid container className={classes.grow} alignItems="center" wrap="nowrap">
             <Grid item>
-              <img style={{ flexShrink: 0, width: 30, margin: 0, marginRight: 8, marginBottom: -4 }} src="/favicon.png" />
+              <img className={classes.logo} src="/favicon.png" />
             </Grid>
             <Grid item>
               <Typography variant="h6" color="inherit">
@@ -32,45 +34,24 @@ const Header = () => {
               </Typography>
             </Grid>
           </Grid>
-
-          <LinkButton primary isIndex={isIndex} onClick={handleClick}>
-            <Typography variant="subtitle2" color="inherit">
-              BLOG
-            </Typography>
-          </LinkButton>
-          <LinkButton isIndex={isIndex} disabled>
-            <Typography variant="subtitle2" color="inherit">
-              CASE
-            </Typography>
-          </LinkButton>
-          <LinkButton isIndex={isIndex} primary={true} disabled>
-            <Typography variant="subtitle2" color="inherit">
-              ABOUT
-            </Typography>
-          </LinkButton>
+          <IconButton onClick={toggleMenu(true)} color="primary" className={classes.button} aria-label="add an alarm">
+            <MenuIcon />
+          </IconButton>
         </Toolbar>
       </AppBar>
+      <Menu toggleMenu={toggleMenu} showMenu={showMenu} />
     </div>
   );
 };
 
-const LinkButton = ({ children, primary = null, onClick, disabled = false, isIndex }) => (
-  <Button onClick={onClick} color={primary ? 'primary' : 'default'} disabled={disabled}>
-    {children}
-  </Button>
-);
-
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   root: {
     flexGrow: 1
   },
   grow: {
     flexGrow: 1
   },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20
-  },
+  logo: { flexShrink: 0, width: 32, margin: 0, marginRight: 16, marginBottom: -4 },
   appBar: {
     background: 'rgba(255,255,255,1)',
     opacity: 0.98,
@@ -78,12 +59,10 @@ const useStyles = makeStyles(theme => ({
     paddingRight: `0px !important`
   },
   toolBar: {
-    padding: '0 24px'
+    padding: '0 24px',
+    minHeight: 56
   },
-  toolbarButton: {
-    marginLeft: -12,
-    marginRight: 20
-  }
-}));
+  button: { padding: 8 }
+});
 
 export default Header;

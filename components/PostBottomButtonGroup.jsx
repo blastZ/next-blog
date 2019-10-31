@@ -37,12 +37,12 @@ const useStyles = makeStyles(() => ({
   backButton: {
     padding: 32,
     borderRadius: 0,
-    borderLeft: 'none'
+    borderLeft: 'none !important'
   },
   forwardButton: {
     padding: 32,
     borderRadius: 0,
-    borderRight: 'none'
+    borderRight: 'none !important'
   },
   backIcon: {
     marginRight: 32

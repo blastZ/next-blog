@@ -1,44 +1,19 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
-import Fab from '@material-ui/core/Fab';
-import CategoryIcon from '@material-ui/icons/Category';
+import Typography from '@material-ui/core/Typography';
 
 import Layout from '../components/Layout';
 import PostCard from '../components/PostCard';
 import PageButton from '../components/PageButton';
-import Typography from '@material-ui/core/Typography';
-import Category from '../components/Category';
+import useApp from '../hooks/useApp';
 
-export default ({ posts = [], categories = { all: 0 } }) => {
-  const [categoryButtonAnchor, setCategoryButtonAnchor] = useState(null);
-  const [category, setCategory] = useState('all');
+export default ({ posts = [] }) => {
+  const { category } = useApp();
   const [page, setPage] = useState(0);
   const pageSize = 7;
-  const classes = useStyles({
-    showCategoryButton: Boolean(!categoryButtonAnchor)
-  });
-
-  const openCategoryMenu = useCallback(
-    e => {
-      console.log(e.currentTarget);
-      setCategoryButtonAnchor(e.currentTarget);
-    },
-    [setCategoryButtonAnchor]
-  );
-
-  const closeCategoryMenu = useCallback(() => {
-    setCategoryButtonAnchor(null);
-  }, []);
-
-  const changeCategory = useCallback(
-    category => {
-      setCategory(category);
-      window.scrollTo(0, 0);
-    },
-    [setCategory]
-  );
+  const classes = useStyles();
 
   const showPosts = useMemo(() => {
     return posts
@@ -50,16 +25,7 @@ export default ({ posts = [], categories = { all: 0 } }) => {
     <>
       <Layout>
         <Slogan classes={classes} />
-        <Posts classes={classes} showPosts={showPosts} changeCategory={changeCategory} page={page} pageSize={pageSize} />
-        <Fab onClick={openCategoryMenu} variant="extended" aria-label="delete" className={classes.category}>
-          <CategoryIcon />
-        </Fab>
-        <Category
-          categories={categories}
-          handleClose={closeCategoryMenu}
-          anchorEle={categoryButtonAnchor}
-          changeCategory={changeCategory}
-        />
+        <Posts classes={classes} showPosts={showPosts} page={page} pageSize={pageSize} />
       </Layout>
     </>
   );
@@ -76,11 +42,11 @@ const Slogan = ({ classes }) => (
   </Grid>
 );
 
-const Posts = ({ classes, showPosts, changeCategory, page, pageSize }) => (
+const Posts = ({ classes, showPosts, page, pageSize }) => (
   <Grid className={classes.posts} item container wrap="nowrap" direction="column" alignItems="center" spacing={6}>
     {showPosts.map(({ id, thumb, title, tags, date, subTitle, slug }) => (
       <Grid key={slug} item>
-        <PostCard id={id} data={{ thumb, title, tags, slug, date, subTitle }} changeCategory={changeCategory} />
+        <PostCard id={id} data={{ thumb, title, tags, slug, date, subTitle }} />
       </Grid>
     ))}
     <Grid item>
@@ -109,19 +75,6 @@ const useStyles = makeStyles(theme => ({
     minHeight: 400,
     '& > div': {
       width: '100%'
-    }
-  },
-  category: {
-    opacity: ({ showCategoryButton }) => (showCategoryButton ? '1' : '0'),
-    transition: 'opacity 284ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, transform 189ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-    position: 'fixed',
-    bottom: 56,
-    right: -24,
-    paddingRight: 40,
-    paddingLeft: 24,
-    backgroundColor: 'rgba(255,255,255,0.8)',
-    '& svg': {
-      color: '#009688'
     }
   }
 }));

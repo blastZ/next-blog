@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect } from 'react';
 import App from 'next/app';
 import Head from 'next/head';
 import { ThemeProvider, makeStyles } from '@material-ui/styles';
@@ -6,6 +6,7 @@ import { ThemeProvider, makeStyles } from '@material-ui/styles';
 import theme from '../src/theme';
 import Progress from '../components/Progress';
 import { getPostList } from '../utils/post-list';
+import useApp, { AppProvider } from '../hooks/useApp';
 
 class MyApp extends App {
   componentDidMount() {
@@ -17,17 +18,19 @@ class MyApp extends App {
 
   static async getInitialProps(appContext) {
     const posts = await getPostList();
-    const categories = posts.reduce((result, current) => {
+    const categoriesObj = posts.reduce((result, current) => {
       current.tags.map(tag => {
         result[tag] ? (result[tag] += 1) : (result[tag] = 1);
       });
 
       return result;
     }, {});
+    const categories = Object.keys(categoriesObj).map(key => ({
+      name: key,
+      num: categoriesObj[key]
+    }));
 
-    categories['all'] = posts.length;
-
-    return { posts, categories };
+    return { posts, categories: [{ name: 'all', num: posts.length }].concat(categories) };
   }
 
   render() {
@@ -40,19 +43,26 @@ class MyApp extends App {
         </Head>
         <ThemeProvider theme={theme}>
           <Progress />
-          <Container>
-            <Component {...pageProps} posts={posts} categories={categories} />
-          </Container>
+          <AppProvider>
+            <Container categories={categories}>
+              <Component {...pageProps} posts={posts} />
+            </Container>
+          </AppProvider>
         </ThemeProvider>
       </>
     );
   }
 }
 
-const Container = props => {
+const Container = ({ categories, children }) => {
   const classes = useStyles();
+  const { setCategories } = useApp();
 
-  return <div>{props.children}</div>;
+  useEffect(() => {
+    setCategories(categories);
+  }, [categories]);
+
+  return <div>{children}</div>;
 };
 
 const useStyles = makeStyles({
@@ -60,18 +70,11 @@ const useStyles = makeStyles({
     'html, body': {
       // scrollBehavior: 'smooth',
       overflowX: 'hidden',
-      margin: 0,
-      paddingRight: '0px !important'
+      margin: 0
     },
     '*': {
       fontFamily: `-apple-system,BlinkMacSystemFont,Helvetica Neue,Helvetica,Arial,PingFang SC,Hiragino Sans GB,Microsoft YaHei,sans-serif`
     }
-    // '@font-face': {
-    //   fontFamily: 'Ali-Regular',
-    //   src: `local('Alibaba-PuHuiTi-Regular'),
-    //     url('https://res.cloudinary.com/stackbunch/raw/upload/v1565955456/blog-assets/Alibaba-PuHuiTi-Regular_dp8dam.woff2')`,
-    //   fontDisplay: 'swap'
-    // }
   }
 });
 
