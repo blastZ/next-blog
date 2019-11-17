@@ -1,7 +1,7 @@
 # install node
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
 source ~/.bashrc
-nvm install v10.16.1
+nvm install v12.13.0
 source ~/.bashrc
 npm install -g pm2
 pm2 ls
