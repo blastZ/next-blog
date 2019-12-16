@@ -20,7 +20,7 @@ const Pre = props => {
   return (
     <div
       style={{
-        backgroundColor: '#2f1d2e',
+        backgroundColor: '#1E1E1E',
         padding: 24,
         paddingLeft: 32,
         borderLeft: '5px solid #38bb6c',
@@ -36,6 +36,7 @@ const Code = props => {
   return (
     <code
       style={{
+        fontSize: 16,
         padding: 2,
         fontFamily: 'roboto',
         color: props.className ? '#06b6ef' : '#ff5700'

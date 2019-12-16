@@ -1,5 +1,5 @@
 # install node
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.1/install.sh | bash
 source ~/.bashrc
 # export NVM_NODEJS_ORG_MIRROR=https://npm.taobao.org/mirrors/node // node mirror for internal server
 nvm install v12.13.0

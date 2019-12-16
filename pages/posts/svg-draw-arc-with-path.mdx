@@ -1,12 +1,12 @@
 import usePost from '../../hooks/usePost';
 
 export const frontMatter = {
-  slug: '/posts/svg-draw-arc-with-path',
-  title: '如何在 SVG 中使用 path 绘制弧形',
-  subTitle: '由于 path 的灵活性，用 path 来绘制弧形能够更好的控制效果，本文将介绍原生和 d3 两种方式来实现它。',
-  tags: ['svg', 'data visualization'],
-  date: '2019/03/12',
-  published: false
+    slug: '/posts/svg-draw-arc-with-path',
+    title: '如何在 SVG 中使用 path 绘制弧形',
+    subTitle: '由于 path 的灵活性，用 path 来绘制弧形能够更好的控制效果，本文将介绍原生和 d3 两种方式来实现它。',
+    tags: ['svg', 'data visualization'],
+    date: '2019/03/12',
+    published: false
 };
 
 export default usePost(frontMatter);
@@ -19,23 +19,23 @@ export default usePost(frontMatter);
 
 ```js
 const polarToCartesian = (centerX, centerY, radius, angleInDegrees) => {
-  const angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180.0; // 将角度转换为弧度
+    const angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180.0; // 将角度转换为弧度
 
-  // 计算在该弧度下半径尾部的坐标点
-  return {
-    x: centerX + radius * Math.cos(angleInRadians),
-    y: centerY + radius * Math.sin(angleInRadians)
-  };
+    // 计算在该弧度下半径尾部的坐标点
+    return {
+        x: centerX + radius * Math.cos(angleInRadians),
+        y: centerY + radius * Math.sin(angleInRadians)
+    };
 };
 
 const describeArc = (x, y, radius, startAngle, endAngle) => {
-  const start = polarToCartesian(x, y, radius, endAngle); // 计算起始坐标点
-  const end = polarToCartesian(x, y, radius, startAngle); // 计算结束坐标点
+    const start = polarToCartesian(x, y, radius, endAngle); // 计算起始坐标点
+    const end = polarToCartesian(x, y, radius, startAngle); // 计算结束坐标点
 
-  const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1'; // 判断是否为大角，即延续角度是否大于180度
+    const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1'; // 判断是否为大角，即延续角度是否大于180度
 
-  const d = `M${start.x},${start.y} A${radius},${radius},0,${largeArcFlag},0,${end.x},${end.y}`;
+    const d = `M${start.x},${start.y} A${radius},${radius},0,${largeArcFlag},0,${end.x},${end.y}`;
 
-  return d;
+    return d;
 };
 ```

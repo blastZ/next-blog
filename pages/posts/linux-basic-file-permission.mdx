@@ -1,14 +1,14 @@
 import usePost from '../../hooks/usePost';
 
 export const frontMatter = {
-  slug: '/posts/linux-basic-file-permission',
-  title: 'Linux 基础之文件权限',
-  subTitle: '文件权限是 linux 相当重要的一部分内容，通过本文将了解到 linux 文件的属性，以及权限修改等操作。',
-  tags: ['linux'],
-  date: '2019/09/25',
-  thumb:
-    'https://res.cloudinary.com/stackbunch/image/upload/w_540,q_auto,c_fill/v1570722021/blog-thumb/linux-basic-file-permission_tedtuu.png',
-  published: true
+    slug: '/posts/linux-basic-file-permission',
+    title: 'Linux 基础之文件权限',
+    subTitle: '文件权限是 linux 相当重要的一部分内容，通过本文将了解到 linux 文件的属性，以及权限修改等操作。',
+    tags: ['linux'],
+    date: '2019/09/25',
+    thumb:
+        'https://res.cloudinary.com/stackbunch/image/upload/w_540,q_auto,c_fill/v1570722021/blog-thumb/linux-basic-file-permission_tedtuu.png',
+    published: true
 };
 
 export default usePost(frontMatter);
@@ -74,9 +74,9 @@ drwxr-xr-x  623 blastz  staff   19936  9 25 23:11 node_modules
 
 常用的修改命令有三个，分别是：
 
-- chgrp 修改文件所属用户组
-- chown 修改文件拥有者
-- chmod 修改文件的权限
+-   chgrp 修改文件所属用户组
+-   chown 修改文件拥有者
+-   chmod 修改文件的权限
 
 ### 修改所属用户组，chgrp（change group）
 
@@ -115,9 +115,9 @@ chown 同样支持【-R】参数修改其所有的子目录和文件。
 
 对于 rwx 三种权限，在 linux 中可以使用数字代替对应关系如下：
 
-- r:4
-- w:2
-- x:1
+-   r:4
+-   w:2
+-   x:1
 
 举个 🌰，test.js 的权限为【-rwxrwx---】，对应的权限数字就是 770，如果要修改它的权限，命令如下：
 
@@ -154,10 +154,10 @@ chmod a+r test.js
 
 w 权限对于目录来说就很重要来，它表示你拥有改动该目录结构列表的权限，也就是以下权限：
 
-- 建立新的文件或目录
-- 删除已有的文件或目录
-- 对已有的文件或目录重命名
-- 移动该目录内的文件或目录位置
+-   建立新的文件或目录
+-   删除已有的文件或目录
+-   对已有的文件或目录重命名
+-   移动该目录内的文件或目录位置
 
 目录的 x 权限，并不是表示目录可执行，它代表的是用户能否进入该目录成为工作目录（同时意味着用户是否能够看到文件的详细信息，也就是 ls -la 的内容）。
 值得注意的是**如果你没有 x 权限，那么就代表你无法切换到这个目录，也就意味着你不能执行目录下的任何命令，即使你拥有 rw 权限。**

@@ -1,14 +1,14 @@
 import usePost from '../../hooks/usePost';
 
 export const frontMatter = {
-  slug: '/posts/three-ways-to-remove-array-duplicates',
-  title: '数组去重的三种方式',
-  subTitle: '使用 Set，Array.filter，Array.reduce 三种方式对数组进行简单快捷的去重。',
-  tags: ['javascript'],
-  date: '2019/03/12',
-  thumb:
-    'https://res.cloudinary.com/stackbunch/image/upload/w_540,q_auto,c_fill/v1572535167/blog-thumb/three-ways-to-remove-array-duplicates_ez2ujr.png',
-  published: true
+    slug: '/posts/three-ways-to-remove-array-duplicates',
+    title: '数组去重的三种方式',
+    subTitle: '使用 Set，Array.filter，Array.reduce 三种方式对数组进行简单快捷的去重。',
+    tags: ['javascript'],
+    date: '2019/03/12',
+    thumb:
+        'https://res.cloudinary.com/stackbunch/image/upload/w_540,q_auto,c_fill/v1572535167/blog-thumb/three-ways-to-remove-array-duplicates_ez2ujr.png',
+    published: true
 };
 
 export default usePost(frontMatter);
@@ -28,7 +28,7 @@ array.filter((o, index) => array.indexOf(o) === index);
 
 // 3.reduce
 array.reduce((result, current) => {
-  return result.indexOf(current) < 0 ? result.concat([current]) : result;
+    return result.indexOf(current) < 0 ? result.concat([current]) : result;
 }, []);
 
 // ['🍧', 1, 2, 3]
@@ -102,7 +102,7 @@ array.filter((o, index) => array.indexOf(o) === index);
 const array = ['🍧', 1, 2, '🍧', '🍧', 3];
 
 array.reduce((result, current) => {
-  return result.indexOf(current) < 0 ? result.concat([current]) : result;
+    return result.indexOf(current) < 0 ? result.concat([current]) : result;
 }, []);
 // 1.['🍧']
 // 2.['🍧', 1]

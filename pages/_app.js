@@ -30,7 +30,10 @@ class MyApp extends App {
       num: categoriesObj[key]
     }));
 
-    return { posts, categories: [{ name: 'all', num: posts.length }].concat(categories) };
+    return {
+      posts,
+      categories: [{ name: 'all', num: posts.length }].concat(categories)
+    };
   }
 
   render() {
@@ -73,7 +76,7 @@ const useStyles = makeStyles({
       margin: 0
     },
     '*': {
-      fontFamily: `-apple-system,BlinkMacSystemFont,Helvetica Neue,Helvetica,Arial,PingFang SC,Hiragino Sans GB,Microsoft YaHei,sans-serif`
+      fontFamily: `-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Helvetica Neue,Helvetica,Arial,PingFang SC,Hiragino Sans GB,Microsoft YaHei,sans-serif`
     }
   }
 });
