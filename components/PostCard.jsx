@@ -98,6 +98,7 @@ const useStyles = makeStyles(theme => ({
     bottom: 16
   },
   title: {
+    whiteSpace: 'nowrap',
     color: '#555555',
     cursor: 'pointer',
     textUnderlinePosition: 'under',
