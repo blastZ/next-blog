@@ -67,12 +67,15 @@ const useStyles = makeStyles(theme => ({
   },
   cover: {
     width: '100%',
-    height: 240,
+    height: 208,
     flexShrink: 0,
     cursor: 'pointer',
     transition: 'opacity 0.6s ease',
     '&:hover': {
       opacity: 0.8
+    },
+    [theme.breakpoints.up('sm')]: {
+      height: 240
     },
     [theme.breakpoints.up('lg')]: {
       width: 320
