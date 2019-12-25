@@ -93,8 +93,8 @@ const useStyles = makeStyles(theme => ({
       fontSize: 18
     },
     [theme.breakpoints.up('lg')]: {
-      width: '66.66666667%',
-      marginLeft: '16.66666667%'
+      width: '70%',
+      marginLeft: '15%'
     },
     marginTop: 64
   },
