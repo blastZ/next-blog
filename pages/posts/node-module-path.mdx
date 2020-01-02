@@ -1,14 +1,14 @@
 import usePost from '../../hooks/usePost';
 
 export const frontMatter = {
-    slug: '/posts/node-module-path',
-    title: 'Node 模块（一）Path',
-    subTitle: 'Path 作为 Node 的基础模块之一，提供了大量的工具函数用来处理文件和文件夹的路径。',
-    tags: ['node'],
-    date: '2019/12/25',
-    thumb:
-        'https://res.cloudinary.com/stackbunch/image/upload/w_540,q_auto,c_fill/v1576499685/blog-thumb/typescript-utility-type-partial_w0aq1g.jpg',
-    published: true
+slug: '/posts/node-module-path',
+title: 'Node 模块（一）Path',
+subTitle: 'Path 作为 Node 的基础模块之一，提供了大量的工具函数用来处理文件和文件夹的路径。',
+tags: ['node'],
+date: '2019/12/25',
+thumb:
+'https://res.cloudinary.com/stackbunch/image/upload/w_540,q_auto,c_fill/v1576499685/blog-thumb/typescript-utility-type-partial_w0aq1g.jpg',
+published: true
 };
 
 export default usePost(frontMatter);
@@ -36,7 +36,7 @@ basename 用来返回 path 的最后一部分，常被用来取文件名，用�
 path.basename('/foo/bar/baz/asdf/quux.html');
 // return 'quux.html'
 
-// 可以通过指定后缀名来单独取得文件名
+// 可以通过指定扩展名来单独取得文件名
 path.basename('/foo/bar/baz/asdf/quux.html', 'html');
 // return 'quux'
 ```
@@ -91,3 +91,44 @@ path.dirname('');
 // return: '.'
 // 空字符返回 .
 ```
+
+## path.extname
+
+```ts
+extname(path: string): string;
+```
+
+extname 返回路径的扩展名，从最后一个【.】到路径字符串的结尾，如果没有【.】或它是整个路径的第一个字符则返回空字符串。
+
+```js
+path.extname('index.html');
+// return: '.html'
+
+path.extname('index.');
+// return: '.'
+
+path.extname('index');
+// return: ''
+
+path.extname('.index');
+// return: ''
+```
+
+## path.format
+
+```ts
+interface FormatInputPathObject {
+  root?: string; // 路径根目录，如：'/' 或 'c:\'
+  dir?: string; // 完整的目录路径，如：'/home/user/dir' 或 'c:\path\dir'
+  base?: string; // 文件名（包含扩展名），如：'index.html'
+  ext?: string; // 扩展名，如：'.html'
+  name?: string; // 文件名，如：'index'
+}
+
+function format(pathObject: FormatInputPathObject): string;
+```
+
+format 函数，通过 pathObject 创建并返回一个路径，参数使用规则如下：
+
+- root 提供时，忽略 dir
+- base 提供时，忽略 name + ext
