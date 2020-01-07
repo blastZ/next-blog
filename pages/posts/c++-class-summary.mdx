@@ -20,14 +20,12 @@ export default usePost(frontMatter);
 内联函数，在 c++ 编译阶段会将函数中的代码直接插入到调用的地方，而省去在程序运行时的调用开销。在类中定义内联成员函数的方式如下：
 
 ```cpp
-class B
-{
-  inline void func1();
-  void func2(){};
+class B {
+    inline void func1();
+    void func2(){};
 };
-void B::func1()
-{
-  cout << "func1" << endl;
+void B::func1() {
+    cout << "func1" << endl;
 };
 ```
 
@@ -41,50 +39,40 @@ void B::func1()
 定义的方式如下：
 
 ```cpp
-class Location
-{
-private:
-  int x, y;
-
-public:
-  void init()
-  {
-    x = 0;
-    y = 0;
-  }
-  void valueX(int value)
-  {
-    x = value;
-  }
-  int valueX()
-  {
-    return x;
-  }
+class Location {
+    private:
+        int x, y;
+    public:
+        void init() {
+            x = 0;
+            y = 0;
+        }
+        void valueX(int value) {
+            x = value;
+        }
+        int valueX() {
+            return x;
+        }
 };
 ```
 
 使用缺省参数时，要注意函数重载的二义性。以下定义的方式：
 
 ```cpp
-class Location
-{
-private:
-  int x, y;
-
-public:
-  void init()
-  {
-    x = 0;
-    y = 0;
-  }
-  void valueX(int value = 0)
-  {
-    x = value;
-  }
-  int valueX()
-  {
-    return x;
-  }
+class Location {
+    private:
+        int x, y;
+    public:
+        void init() {
+            x = 0;
+            y = 0;
+        }
+        void valueX(int value = 0) {
+            x = value;
+        }
+        int valueX() {
+            return x;
+        }
 };
 ```
 
@@ -104,44 +92,46 @@ public:
 定义方式如下：
 
 ```cpp
-class Complex
-{
-private:
-  double real, image;
+class Complex {
+    private:
+      double real, image;
 
-public:
-  void Set(double r, double i);
-  Complex(double r, double i);
-  Complex(double r);
-  Complex(Complex c1, Complex c2);
+    public:
+      void Set(double r, double i);
+    Complex(double r, double i);
+    Complex(double r);
+    Complex(Complex c1, Complex c2);
 };
-Complex::Complex(double r, double i)
-{
-  real = r;
-  image = i;
+Complex::Complex(double r, double i) {
+    real = r;
+    image = i;
 }
-Complex::Complex(double r)
-{
-  real = r;
-  image = 0;
+Complex::Complex(double r) {
+    real = r;
+    image = 0;
 }
-Complex::Complex(Complex c1, Complex c2)
-{
-  real = c1.real + c2.real;
-  image = c1.image + c2.image;
+Complex::Complex(Complex c1, Complex c2) {
+    real = c1.real + c2.real;
+    image = c1.image + c2.image;
 }
 ```
 
 当定义对象数组时，会依次调用构造函数来初始化对象。
 
 ```cpp
-Complex array[2] = {Complex(2, 3), 1};
+Complex array[2] = {
+    Complex(2, 3),
+    1
+};
 ```
 
 注意定义指针数组时，指针是可以不初始化的，如下只会调用两次构造函数：
 
 ```cpp
-Complex *array2[3] = {new Complex(1, 2), new Complex(2)};
+Complex *array2[3] = {
+    new Complex(1, 2),
+    new Complex(2)
+};
 ```
 
 ## 4.复制构造函数
@@ -168,11 +158,10 @@ Complex c3 = c1; // 初始化语句，非赋值语句，此时 c3 是由复制�
 
 ```cpp
 void func(A a1) {}
-int main
-{
-  A a2;
-  func(a2);
-  return 0;
+int main {
+    A a2;
+    func(a2);
+    return 0;
 }
 ```
 
@@ -181,10 +170,9 @@ int main
 3. 如果某个函数的返回值是类 A 的对象，则函数返回时，会调用类 A 的复制构造函数
 
 ```cpp
-A func()
-{
-  A b(4);
-  return b;
+A func() {
+    A b(4);
+    return b;
 }
 ```
 
@@ -204,10 +192,9 @@ A func()
 在上面构造函数中，举例的 `Complex` 类中，以下构造函数就是一个类型转换构造函数：
 
 ```cpp
-Complex(int i)
-{
-  real = i;
-  image = 0;
+Complex(int i) {
+    real = i;
+    image = 0;
 }
 ```
 
@@ -229,16 +216,16 @@ Complex(int i)
 
 ```cpp
 class String {
-  private:
-    char *p;
-  public:
-    String() {
-      p = new char[10];
-    }
-    ~String();
+    private:
+        char *p;
+    public:
+        String() {
+            p = new char[10];
+        };
+        ~String();
 };
 String::~String() {
-  delete[] p;
+    delete[] p;
 }
 ```
 
@@ -263,8 +250,8 @@ CRectangle::PrintTotal();
 2. 对象名.成员名
 
 ```cpp
-  CRectangle r;
-  r.PrintTotal();
+CRectangle r;
+r.PrintTotal();
 ```
 
 3. 指针 -> 成员名
@@ -277,8 +264,8 @@ p -> PrintTotal();
 4. 引用.成员名
 
 ```cpp
-  CRectangle &ref = r;
-  int n = ref.nTotalNumber;
+CRectangle &ref = r;
+int n = ref.nTotalNumber;
 ```
 
 静态成员变量，本质上就是全局变量，哪怕一个对象都不存在，静态变量也依旧存在。同样的静态成员函数本质上就是全局函数。写静态成员的主要目的是让
@@ -307,3 +294,83 @@ int CRectangle::nTotalArea = 0;
 当封闭类对象消亡时，先执行封闭类的析构函数，再执行成员对象的析构函数。
 
 ## 9.友元（Friend）
+
+友元分为友元函数和友元类。
+
+一个类的友元函数和友元类可以访问该类的私有成员，定义方式如下：
+
+```cpp
+class A {
+    private:
+        int number;
+    friend int GetNumber(A *a); // 声明全局函数为友元，该函数就能访问私有变量 number 了
+    friend int B::GetNumber(A *a); // 声明某个类的函数为友元
+    friend class C; // 声明友元类，C 内可以任意访问 A 的私有成员
+}
+```
+
+友元类之间的关系，不能传递也不能继承。
+
+## 10.this 指针
+
+要理解 this 指针，可以通过将 c++ 转换成 c 来思考，早期是没有 c++ 编译器的，那时候通过将 c++ 转换成 c 的代码再去编译执行，看下面这段 c++ 代码：
+
+```cpp
+class CCar {
+    public:
+        int price;
+        void SetPrice(int p);
+}
+
+void CCar::SetPrice(int p) {
+    price = p;
+}
+
+int main() {
+    CCar car;
+    car.SetPrice(20000);
+    return 0;
+}
+```
+
+现在我们把它转换成 c 的代码，代码如下：
+
+```c
+struct CCar {
+    int price;
+}
+
+void SetPrice(struct CCar *this, int p) {
+    this -> price = p;
+}
+
+int main() {
+    struct CCar car;
+    SetPrice(&car, 20000);
+    return 0;
+}
+```
+
+这样结果就很明显了，**this 指针就是指向成员函数所作用的那个对象**。
+
+所以，在代码被编译成机器指令后实际的参数会比定义的参数多一个，多出的那个就是 this 指针。
+
+```cpp
+class A {
+    public:
+        void Hello() {
+            cout << "Hello" << endl;
+        }
+}
+
+int main() {
+    A *p = NULL;
+    *p -> Hello(); // Hello
+    return 0;
+}
+```
+
+上述这段代码是可以编译通过的，而且能够正常打印出结果，通过转换 c 代码的方法我们可以知道 this 指针是可以传入 NULL 的，
+但是如果在其中调用了类的成员在运行阶段就会报错了。
+
+注意，**静态成员函数不能使用 this 指针，因为静态成员函数不作用于某个具体的对象，所以它的实际参数与定义的参数个数相同。**
