@@ -1,9 +1,11 @@
-import Layout from '../components/Layout';
+import { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { MDXProvider } from '@mdx-js/react';
 import Grid from '@material-ui/core/Grid';
 
+import Layout from '../components/Layout';
 import Highlight from './Highlight';
+import useApp from '../hooks/useApp';
 
 const Title = props => {
   return (
@@ -55,10 +57,15 @@ const components = {
 
 export default ({ frontMatter, children }) => {
   const classes = useStyles();
+  const { setCurrentPost } = useApp();
 
   if (!frontMatter) return <div>No Such File</div>;
 
   const { title, date, slug } = frontMatter;
+
+  useEffect(() => {
+    setCurrentPost(frontMatter);
+  }, [setCurrentPost, frontMatter]);
 
   return (
     <MDXProvider components={components}>
