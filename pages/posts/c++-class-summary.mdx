@@ -1,3 +1,4 @@
+import Anchor from '../../components/Anchor';
 import usePost from '../../hooks/usePost';
 
 export const frontMatter = {
@@ -6,16 +7,28 @@ export const frontMatter = {
     subTitle: '对C++类的使用进行一个总结，便于遗忘时进行回顾。',
     tags: ['c++'],
     date: '2020/01/05',
-    thumb:
-        'https://res.cloudinary.com/stackbunch/image/upload/w_540,q_auto,c_fill/v1576499685/blog-thumb/typescript-utility-type-partial_w0aq1g.jpg',
-    published: true
+    thumb: 'https://res.cloudinary.com/stackbunch/image/upload/w_540,q_auto,c_fill/v1578501178/blog-thumb/c_-class-summary_x6a4hx.jpg',
+    published: true,
+    anchors: [
+        '内联成员函数',
+        '成员函数的重载及参数缺省',
+        '构造函数',
+        '复制构造函数',
+        '类型转换构造函数',
+        '析构函数',
+        '静态成员变量和静态成员函数',
+        '成员对象和封闭类',
+        '友元（Friend）',
+        'this 指针',
+        '常量对象，常量成员函数和常引用'
+    ]
 };
 
 export default usePost(frontMatter);
 
 # C++类总结
 
-## 1.内联成员函数
+<Anchor id="0" />
 
 内联函数，在 c++ 编译阶段会将函数中的代码直接插入到调用的地方，而省去在程序运行时的调用开销。在类中定义内联成员函数的方式如下：
 
@@ -34,7 +47,7 @@ void B::func1() {
 -   使用 inline + 成员函数
 -   整个函数体，出现在类定义的内部
 
-## 2.成员函数的重载及参数缺省
+<Anchor id="1" />
 
 定义的方式如下：
 
@@ -78,7 +91,7 @@ class Location {
 
 当调用 `location.valueX()` 时，就会出现二义性，可能是调用第一个 `valueX` 默认参数为 0，也可能调用的是第二个无参的 `valueX`，这样编译时就会报错。
 
-## 3.构造函数
+<Anchor id="2" />
 
 构造函数是成员函数的一种，有以下特性：
 
@@ -134,7 +147,7 @@ Complex *array2[3] = {
 };
 ```
 
-## 4.复制构造函数
+<Anchor id="3" />
 
 复制构造函数的特性如下：
 
@@ -182,7 +195,7 @@ A func() {
 
 比如，当我们需要统计一个类被创建了多少个对象时，只记录了构造函数被调用的次数，而不自己编写复制构造函数，一旦出现上述的调用，统计的数量就会出错。
 
-## 5.类型转换构造函数
+<Anchor id="4" />
 
 类型转换构造函数，是特殊的构造函数，它具有以下特性：
 
@@ -200,7 +213,7 @@ Complex(int i) {
 
 如果通过 `c1 = 3` 这种方式去对 c1 进行赋值，那么 3 这个数字就会被转化成一个临时的对象，其调用的构造函数就是上面的构造函数，所以它也叫类型转化构造函数。
 
-## 6.析构函数
+<Anchor id="5" />
 
 析构函数具有以下特征：
 
@@ -231,7 +244,7 @@ String::~String() {
 
 同样，对象数组在生命周期结束时，对象数组的每个元素的析构函数都会被调用。
 
-## 7.静态成员变量和静态成员函数
+<Anchor id="6" />
 
 通过 static 关键字来定义静态成员变量和函数，它们的基本概念如下：
 
@@ -280,7 +293,7 @@ int CRectangle::nTotalArea = 0;
 
 很明显，在静态成员函数中，不能调用非静态成员变量，因为不能确定那个变量属于哪个对象，当然也不能调用非静态成员函数，因为其中可能会访问到非静态成员变量。
 
-## 8. 成员对象和封闭类
+<Anchor id="7" />
 
 成员对象指一个对象的成员变量是另一个类的对象。而包含成员对象的类就叫封闭类（Enclosing）。
 
@@ -293,7 +306,7 @@ int CRectangle::nTotalArea = 0;
 
 当封闭类对象消亡时，先执行封闭类的析构函数，再执行成员对象的析构函数。
 
-## 9.友元（Friend）
+<Anchor id="8" />
 
 友元分为友元函数和友元类。
 
@@ -306,12 +319,12 @@ class A {
     friend int GetNumber(A *a); // 声明全局函数为友元，该函数就能访问私有变量 number 了
     friend int B::GetNumber(A *a); // 声明某个类的函数为友元
     friend class C; // 声明友元类，C 内可以任意访问 A 的私有成员
-}
+};
 ```
 
 友元类之间的关系，不能传递也不能继承。
 
-## 10.this 指针
+<Anchor id="9" />
 
 要理解 this 指针，可以通过将 c++ 转换成 c 来思考，早期是没有 c++ 编译器的，那时候通过将 c++ 转换成 c 的代码再去编译执行，看下面这段 c++ 代码：
 
@@ -320,7 +333,7 @@ class CCar {
     public:
         int price;
         void SetPrice(int p);
-}
+};
 
 void CCar::SetPrice(int p) {
     price = p;
@@ -338,7 +351,7 @@ int main() {
 ```c
 struct CCar {
     int price;
-}
+};
 
 void SetPrice(struct CCar *this, int p) {
     this -> price = p;
@@ -361,7 +374,7 @@ class A {
         void Hello() {
             cout << "Hello" << endl;
         }
-}
+};
 
 int main() {
     A *p = NULL;
@@ -374,3 +387,35 @@ int main() {
 但是如果在其中调用了类的成员在运行阶段就会报错了。
 
 注意，**静态成员函数不能使用 this 指针，因为静态成员函数不作用于某个具体的对象，所以它的实际参数与定义的参数个数相同。**
+
+<Anchor id="10" />
+
+常量对象，不能修改它的值，也不能调用非常量成员函数（因为其中可能会修改对象的成员变量值）。
+
+```cpp
+const Demo obj;
+```
+
+常量成员函数，不能修改它所作用的对象。因此在常量成员函数中不能修改成员变量的值，静态成员变量除外，因为静态成员对象不作用于某个对象。同理，
+常量成员函数也不能调用同类的非常量以及非静态成员函数。定义方式如下：
+
+```cpp
+class Demo {
+    private:
+        int value;
+    public:
+        int GetValue() const;
+};
+int Demo::GetValue() const {
+    return value;
+}
+```
+
+注意，**两个成员函数，名字和参数都相同，但一个是常量成员函数，一个不是，这属于重载而不是重定义**。
+
+常引用多被用于作为函数的参数值，因为上面说过如果参数是一个对象，就会调用该对象的复制构造函数，为了节省时间和空间上的开销，就会使用
+对象的引用来做参数，而为了避免对象的成员变量被修改就会使用常引用。
+
+```cpp
+void Demo::PrintObj(const Demo &d) {}
+```

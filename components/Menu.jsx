@@ -68,22 +68,6 @@ export default ({ toggleMenu: toggle, showMenu: show }) => {
       </ListItem>
     ));
 
-  const postList = () => (
-    <>
-      <ListItem button>
-        <ListItemIcon>
-          <ReportIcon />
-        </ListItemIcon>
-        <ListItemText
-          onClick={() => {
-            window.open('https://github.com/blastZ/next-blog/issues');
-          }}
-          primary={'Report'}
-        />
-      </ListItem>
-    </>
-  );
-
   return (
     <SwipeableDrawer
       disableBackdropTransition={!iOS}
@@ -94,6 +78,49 @@ export default ({ toggleMenu: toggle, showMenu: show }) => {
       onOpen={toggle(true)}>
       {sideList()}
     </SwipeableDrawer>
+  );
+};
+
+const postList = () => {
+  const router = useRouter();
+  const { currentPost } = useApp();
+  return (
+    <>
+      {Array.isArray(currentPost.anchors) && (
+        <List>
+          {currentPost.anchors.map((o, index) => (
+            <ListItem key={o} button>
+              <ListItemText
+                style={{ color: '#009688' }}
+                primaryTypographyProps={{
+                  display: 'block',
+                  noWrap: true
+                }}
+                onClick={() => {
+                  router.replace(`${currentPost.slug}#${index}`);
+                }}
+                primary={o}
+              />
+            </ListItem>
+          ))}
+        </List>
+      )}
+      {Array.isArray(currentPost.anchors) && <Divider />}
+      <List>
+        <ListItem button>
+          <ListItemIcon>
+            <ReportIcon />
+          </ListItemIcon>
+
+          <ListItemText
+            onClick={() => {
+              window.open('https://github.com/blastZ/next-blog/issues');
+            }}
+            primary={'Report'}
+          />
+        </ListItem>
+      </List>
+    </>
   );
 };
 
