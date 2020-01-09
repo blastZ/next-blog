@@ -22,7 +22,9 @@ const theme = createMuiTheme({
     color: '#555'
   },
   typography: {
-    useNextVariants: true
+    useNextVariants: true,
+    fontFamily:
+      '-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Helvetica Neue,Helvetica,Arial,PingFang SC,Hiragino Sans GB,Microsoft YaHei,sans-serif'
   }
 });
 

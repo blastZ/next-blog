@@ -9,10 +9,8 @@ import PostCard from '../components/PostCard';
 import PageButton from '../components/PageButton';
 import useApp from '../hooks/useApp';
 
-export default ({ posts = [] }) => {
-  const { category } = useApp();
-  const [page, setPage] = useState(0);
-  const pageSize = 7;
+export default ({ posts }) => {
+  const { category, page, pageSize } = useApp();
   const classes = useStyles();
 
   const showPosts = useMemo(() => {

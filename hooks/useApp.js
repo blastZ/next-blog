@@ -2,7 +2,11 @@ import { createContext, useContext, useReducer, useMemo, useCallback } from 'rea
 
 const AppContext = createContext();
 
+const PAGE_SIZE = 7;
+
 const initState = {
+  posts: [],
+  page: 0,
   categories: [
     {
       name: 'all',
@@ -10,11 +14,17 @@ const initState = {
     }
   ],
   category: 'all',
-  currentPost: {}
+  currentPost: {},
+  nextPost: null
 };
 
 const reducer = (state, { type, payload }) => {
   switch (type) {
+    case 'SET_POSTS':
+      return {
+        ...state,
+        posts: payload
+      };
     case 'SET_CATEGORIES':
       return {
         ...state,
@@ -29,6 +39,16 @@ const reducer = (state, { type, payload }) => {
       return {
         ...state,
         currentPost: payload
+      };
+    case 'SET_NEXT_POST':
+      return {
+        ...state,
+        nextPost: payload
+      };
+    case 'SET_PAGE':
+      return {
+        ...state,
+        page: payload
       };
   }
 };
@@ -76,9 +96,54 @@ export default () => {
 
   const setCurrentPost = useCallback(
     payload => {
+      const { posts } = state;
+      let nextPost = null;
+
+      const currentPostIndex = posts.findIndex(o => o.slug == payload.slug);
+
+      if (currentPostIndex + 1 < posts.length) {
+        nextPost = posts[currentPostIndex + 1];
+      }
+
       dispatch({
         type: 'SET_CURRENT_POST',
         payload
+      });
+
+      dispatch({
+        type: 'SET_NEXT_POST',
+        payload: nextPost
+      });
+    },
+    [state.posts, dispatch]
+  );
+
+  const initApp = useCallback(
+    payload => {
+      const posts = payload;
+
+      const categoriesObj = posts.reduce((result, current) => {
+        current.tags.map(tag => {
+          result[tag] ? (result[tag] += 1) : (result[tag] = 1);
+        });
+
+        return result;
+      }, {});
+      const categories = [{ name: 'all', num: posts.length }].concat(
+        Object.keys(categoriesObj).map(key => ({
+          name: key,
+          num: categoriesObj[key]
+        }))
+      );
+
+      dispatch({
+        type: 'SET_CATEGORIES',
+        payload: categories
+      });
+
+      dispatch({
+        type: 'SET_POSTS',
+        payload: posts
       });
     },
     [dispatch]
@@ -86,8 +151,10 @@ export default () => {
 
   return {
     ...state,
+    pageSize: PAGE_SIZE,
     setCategories,
     setCategory,
-    setCurrentPost
+    setCurrentPost,
+    initApp
   };
 };

@@ -18,26 +18,12 @@ class MyApp extends App {
 
   static async getInitialProps(appContext) {
     const posts = await getPostList();
-    const categoriesObj = posts.reduce((result, current) => {
-      current.tags.map(tag => {
-        result[tag] ? (result[tag] += 1) : (result[tag] = 1);
-      });
 
-      return result;
-    }, {});
-    const categories = Object.keys(categoriesObj).map(key => ({
-      name: key,
-      num: categoriesObj[key]
-    }));
-
-    return {
-      posts,
-      categories: [{ name: 'all', num: posts.length }].concat(categories)
-    };
+    return { posts };
   }
 
   render() {
-    const { Component, pageProps, posts, categories } = this.props;
+    const { Component, pageProps, posts } = this.props;
 
     return (
       <>
@@ -47,7 +33,7 @@ class MyApp extends App {
         <ThemeProvider theme={theme}>
           <Progress />
           <AppProvider>
-            <Container categories={categories}>
+            <Container posts={posts}>
               <Component {...pageProps} posts={posts} />
             </Container>
           </AppProvider>
@@ -57,13 +43,13 @@ class MyApp extends App {
   }
 }
 
-const Container = ({ categories, children }) => {
+const Container = ({ posts, children }) => {
   const classes = useStyles();
-  const { setCategories } = useApp();
+  const { initApp } = useApp();
 
   useEffect(() => {
-    setCategories(categories);
-  }, [categories]);
+    initApp(posts);
+  }, [posts]);
 
   return <div>{children}</div>;
 };

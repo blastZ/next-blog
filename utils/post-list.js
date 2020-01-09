@@ -1,6 +1,6 @@
 const getPostNames = () =>
   new Promise((resolve, reject) => {
-    const postFileNames = preval`module.exports = require("fs").readdirSync("./pages/posts")` || [];
+    const postFileNames = preval`module.exports = require("fs").readdirSync(require("path").resolve(process.cwd(), "./pages/posts"))` || [];
     resolve(postFileNames);
   });
 
