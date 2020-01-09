@@ -9,7 +9,8 @@ const initState = {
       num: 0
     }
   ],
-  category: 'all'
+  category: 'all',
+  currentPost: {}
 };
 
 const reducer = (state, { type, payload }) => {
@@ -23,6 +24,11 @@ const reducer = (state, { type, payload }) => {
       return {
         ...state,
         category: payload
+      };
+    case 'SET_CURRENT_POST':
+      return {
+        ...state,
+        currentPost: payload
       };
   }
 };
@@ -68,9 +74,20 @@ export default () => {
     window.scrollTo(0, 0);
   });
 
+  const setCurrentPost = useCallback(
+    payload => {
+      dispatch({
+        type: 'SET_CURRENT_POST',
+        payload
+      });
+    },
+    [dispatch]
+  );
+
   return {
     ...state,
     setCategories,
-    setCategory
+    setCategory,
+    setCurrentPost
   };
 };

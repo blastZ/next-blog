@@ -14,19 +14,19 @@ const RecentPosts = () => {
       </Grid>
       {[
         {
+          slug: '/posts/c++-class-summary',
+          title: 'C++类总结',
+          date: '2020/01/05'
+        },
+        {
+          slug: '/posts/typescript-utility-type-partial',
+          title: 'Typescript 工具类（一）',
+          date: '2019/12/14'
+        },
+        {
           slug: '/posts/linux-basic-file-permission',
           date: '2019/09/25',
           title: 'Linux 基础之文件权限'
-        },
-        {
-          slug: '/posts/ssh-detail',
-          date: '2019/06/14',
-          title: 'SSH 详解'
-        },
-        {
-          slug: '/posts/http2-best-practices',
-          date: '2019/06/05',
-          title: 'HTTP2 最佳实践'
         }
       ].map((o, index) => (
         <Grid key={o.slug} item container alignItems="center" wrap="nowrap">
