@@ -82,8 +82,18 @@ export default ({ toggleMenu: toggle, showMenu: show }) => {
 };
 
 const postList = () => {
-  const router = useRouter();
   const { currentPost } = useApp();
+
+  const scrollIntoView = useCallback(
+    id => () => {
+      const ele = document.getElementById(`${id}`);
+      if (ele) {
+        ele.scrollIntoView();
+      }
+    },
+    []
+  );
+
   return (
     <>
       {Array.isArray(currentPost.anchors) && (
@@ -96,9 +106,7 @@ const postList = () => {
                   display: 'block',
                   noWrap: true
                 }}
-                onClick={() => {
-                  router.replace(`${currentPost.slug}#${index}`);
-                }}
+                onClick={scrollIntoView(index)}
                 primary={o}
               />
             </ListItem>
