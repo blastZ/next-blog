@@ -21,7 +21,7 @@ export default () => {
   }, [router]);
 
   const changeRouter = React.useCallback(() => {
-    router.push(nextPost.slug).then(() => {
+    router.replace(nextPost.slug).then(() => {
       window.scrollTo(0, 0);
     });
   }, [router, nextPost]);
