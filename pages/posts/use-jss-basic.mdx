@@ -1,0 +1,105 @@
+import usePost from '../../hooks/usePost';
+
+export const frontMatter = {
+    slug: '/posts/use-jss-basic',
+    title: '初探 JSS',
+    subTitle: 'JSS 允许我们在 JS 中声明式的定义 CSS 样式，它不依赖于框架，同时支持前端和后端编译。',
+    tags: ['javascript', 'css'],
+    date: '2020/02/28',
+    thumb: 'https://res.cloudinary.com/stackbunch/image/upload/w_540,q_auto,c_fill/v1560449319/blog-thumb/ecmascript-standard_zmscs9.jpg',
+    published: true
+};
+
+export default usePost(frontMatter);
+
+# 初探 JSS
+
+## 什么是 JSS
+
+JSS 允许我们在 JS 中能够以描述性的，非冲突的，可重用的方式去定义 CSS 样式。并且它不依赖于框架，可以在浏览器端和服务端进行编译。它也是这个 blog 使用的 UI 框架，
+[Material-UI](https://material-ui.com/) 所使用的 CSS 解决方案。
+
+## 引入 JSS
+
+可以通过 yarn 或 npm 安装依赖：
+
+```bash
+yarn add jss jss-preset-default
+# or
+npm install jss jss-preset-default
+```
+
+也可以直接使用官方提供的 [CDN](https://cssinjs.org/cdn/)：
+
+```html
+<script src="https://unpkg.com/jss/dist/jss.min.js"></script>
+<script src="https://unpkg.com/jss-preset-default/dist/jss-preset-default.min.js"></script>
+```
+
+其中 `preset` 用于快速初始化一些推荐的插件，像可以使用驼峰编写 CSS 属性，支持全局 CSS 等插件都包含在里面。
+
+## 初始化 JSS
+
+当使用 preset 时，初始化 JSS 如下所示：
+
+```js
+import jss from 'jss';
+import preset from 'jss-preset-default';
+
+jss.setup(preset());
+```
+
+如果你想单独使用这些插件的话，需要手动去使用它们：
+
+```js
+import camelCase from 'jss-plugin-camel-case';
+import somePlugin from 'jss-some-plugin';
+
+jss.use(camelCase(), somePlugin());
+```
+
+## 声明 CSS 样式
+
+如果我们想创建一个绿色的按钮，那么可以这样去定义它：
+
+```js
+const style = {
+    myButton: {
+        color: 'green'
+    }
+};
+```
+
+使用过 React 的，对这种定义方式一定不会陌生。不过与 React 不同，JSS 创建的并不是内联样式，而是真正的 CSS 样式表。
+
+## 编译 CSS 对象
+
+接着我们使用 JSS 编译它，编译过程中会启用对应的插件：
+
+```js
+const sheet = jss.createStyleSheet(style);
+```
+
+## 生成 CSS 样式表
+
+如果是在浏览器端渲染，可以使用 `attch()` 方法：
+
+```js
+sheet.attch();
+```
+
+这会在 DOM 中生成对应的样式：
+
+```js
+<style data-jss>
+    .myButton-0-0-1 {
+        color: green;
+    }
+</style>
+```
+
+在编译后得到的 `sheet` 对象中，我们可以通过 `sheet.classes.myButton` 来取得随机生成的 `class` 名称。
+
+如果是在服务端渲染，可以使用 `sheet.toString()` 获取 CSS 的字符串。由于服务端渲染依赖于使用的框架，本文作为初探不展示
+过多的例子，可以看下 [React SSR](https://github.com/cssinjs/examples/blob/gh-pages/react-ssr/src/server.js) 的官方
+实例代码，或者期待本文的后续内容【深入 JSS】（预计 3 月更新）
