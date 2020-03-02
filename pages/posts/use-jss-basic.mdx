@@ -60,7 +60,7 @@ jss.use(camelCase(), somePlugin());
 
 ## 声明 CSS 样式
 
-如果我们想创建一个绿色的按钮，那么可以这样去定义它：
+如果我们想创建一个按钮的样式，那么可以这样去定义它：
 
 ```js
 const style = {
@@ -72,9 +72,79 @@ const style = {
 
 使用过 React 的，对这种定义方式一定不会陌生。不过与 React 不同，JSS 创建的并不是内联样式，而是真正的 CSS 样式表。
 
+JSS 支持所有 CSS 语法，但由于 JSS 是基于插件的架构，所以一些特性被划分到了可选插件中，使用前需要启用这些插件。
+
+除了上面的基础语法，我们还可以使用 `media query` 语法：
+
+```js
+const style = {
+    myButton: {
+        color: 'green'
+    },
+    '@media (min-width: 1024px)': {
+        color: 'red'
+    }
+};
+```
+
+当然同样支持 `keyframes` 动画：
+
+```js
+const style = {
+    '@keyframes balala': {
+        from： {
+            color: 'green'
+        },
+        to: {
+            color: 'red'
+        }
+    },
+    myButton: {
+        animation: '$balala'
+    }
+};
+```
+
+其中使用 `$` 来指定被定义在同一个样式表中的规则。
+
+伪类和伪元素的支持也不能少：
+
+```js
+const style = {
+    myButton: {
+        color: 'green',
+        '&:hover': {
+            color: 'red'
+        },
+        '&::after': {
+            content: 'JSS'
+        }
+    }
+};
+```
+
+通过 `&` 获取当前父级的样式规则。
+
+结合 `$ref` 和 `&ref` 的语法，可以实现复杂的样式，比如浮动到外部边框时，按钮变色：
+
+```js
+const style = {
+    container: {
+        '&:hover $myButton': {
+            color: 'red'
+        }
+    },
+    myButton: {
+        color: 'green'
+    }
+};
+```
+
+当然还可以定义全局样式
+
 ## 编译 CSS 对象
 
-接着我们使用 JSS 编译它，编译过程中会启用对应的插件：
+在定义完样式对象后，我们需要使用 JSS 来编译它，编译过程中会使用对应的插件来支持各种特殊的语法：
 
 ```js
 const sheet = jss.createStyleSheet(style);
@@ -82,13 +152,15 @@ const sheet = jss.createStyleSheet(style);
 
 ## 生成 CSS 样式表
 
+编译完成后，就到了最重要的，将样式渲染到页面了。
+
 如果是在浏览器端渲染，可以使用 `attch()` 方法：
 
 ```js
 sheet.attch();
 ```
 
-这会在 DOM 中生成对应的样式：
+以上面第一个样式表为例，在执行完 `attch` 方法后，DOM 中会被插入如下的样式：
 
 ```js
 <style data-jss>
@@ -98,8 +170,10 @@ sheet.attch();
 </style>
 ```
 
-在编译后得到的 `sheet` 对象中，我们可以通过 `sheet.classes.myButton` 来取得随机生成的 `class` 名称。
+在编译得到的 `sheet` 对象中，我们可以通过 `sheet.classes.myButton` 来取得这个生成的 `class` 的名称。
 
-如果是在服务端渲染，可以使用 `sheet.toString()` 获取 CSS 的字符串。由于服务端渲染依赖于使用的框架，本文作为初探不展示
-过多的例子，可以看下 [React SSR](https://github.com/cssinjs/examples/blob/gh-pages/react-ssr/src/server.js) 的官方
-实例代码，或者期待本文的后续内容【深入 JSS】（预计 3 月更新）
+如果是在服务端渲染，可以使用 `sheet.toString()` 获取 CSS 的字符串。由于服务端渲染依赖于使用的框架，本文作为初探不做过多演示
+，可以先看下 [React SSR](https://github.com/cssinjs/examples/blob/gh-pages/react-ssr/src/server.js) 的官方实例代码，
+或者期待本文的后续内容【深入 JSS】（预计 3 月中更新）
+
+上面生成的样式表默认会插入到 `<head>` 中
