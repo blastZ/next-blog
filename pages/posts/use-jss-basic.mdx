@@ -7,7 +7,7 @@ export const frontMatter = {
     tags: ['javascript', 'css'],
     date: '2020/02/28',
     thumb: 'https://res.cloudinary.com/stackbunch/image/upload/w_540,q_auto,c_fill/v1560449319/blog-thumb/ecmascript-standard_zmscs9.jpg',
-    published: true
+    published: false,
 };
 
 export default usePost(frontMatter);
@@ -65,8 +65,8 @@ jss.use(camelCase(), somePlugin());
 ```js
 const style = {
     myButton: {
-        color: 'green'
-    }
+        color: 'green',
+    },
 };
 ```
 
@@ -79,11 +79,11 @@ JSS 支持所有 CSS 语法，但由于 JSS 是基于插件的架构，所以一
 ```js
 const style = {
     myButton: {
-        color: 'green'
+        color: 'green',
     },
     '@media (min-width: 1024px)': {
-        color: 'red'
-    }
+        color: 'red',
+    },
 };
 ```
 
@@ -114,12 +114,12 @@ const style = {
     myButton: {
         color: 'green',
         '&:hover': {
-            color: 'red'
+            color: 'red',
         },
         '&::after': {
-            content: 'JSS'
-        }
-    }
+            content: 'JSS',
+        },
+    },
 };
 ```
 
@@ -131,12 +131,12 @@ const style = {
 const style = {
     container: {
         '&:hover $myButton': {
-            color: 'red'
-        }
+            color: 'red',
+        },
     },
     myButton: {
-        color: 'green'
-    }
+        color: 'green',
+    },
 };
 ```
 

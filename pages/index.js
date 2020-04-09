@@ -3,19 +3,21 @@ import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
+import fs from 'fs';
+import path from 'path';
 
 import Layout from '../components/Layout';
 import PostCard from '../components/PostCard';
 import PageButton from '../components/PageButton';
 import useApp from '../hooks/useApp';
 
-export default ({ posts }) => {
+export default ({ posts = [] }) => {
   const { category, page, pageSize } = useApp();
   const classes = useStyles();
 
   const showPosts = useMemo(() => {
     return posts
-      .filter(o => (category !== 'all' && o.tags.includes(category)) || category === 'all')
+      .filter((o) => (category !== 'all' && o.tags.includes(category)) || category === 'all')
       .slice(page * pageSize, page * pageSize + pageSize);
   }, [posts, category, page, pageSize]);
 
@@ -28,6 +30,26 @@ export default ({ posts }) => {
     </>
   );
 };
+
+export async function getStaticProps() {
+  const postNames = fs.readdirSync(path.resolve('./pages/posts'));
+
+  const posts = postNames
+    .filter((o) => path.extname(o) === '.mdx')
+    .map((name) => {
+      const frontMatter = require(`./posts/${name}`).frontMatter;
+
+      return frontMatter;
+    })
+    .filter((o) => o && o.published)
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  return {
+    props: {
+      posts,
+    },
+  };
+}
 
 const Slogan = ({ classes }) => (
   <Grid className={classes.slogan} item container direction="column" alignItems="center" spacing={3}>
@@ -56,23 +78,23 @@ const Posts = ({ classes, showPosts, page, pageSize }) => (
   </Grid>
 );
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   slogan: {
     marginTop: 56,
     paddingLeft: 48,
     paddingRight: 48,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   posts: {
     [theme.breakpoints.up('md')]: {
-      width: '90%'
+      width: '90%',
     },
     padding: 16,
     margin: '0px auto',
     marginTop: 48,
     minHeight: 400,
     '& > div': {
-      width: '100%'
-    }
-  }
+      width: '100%',
+    },
+  },
 }));
