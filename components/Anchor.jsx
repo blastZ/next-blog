@@ -1,6 +1,6 @@
 import useApp from '../hooks/useApp';
 
-export default ({ id }) => {
+export default function Anchor ({ id }) {
   const { currentPost } = useApp();
   const { anchors = [] } = currentPost;
 

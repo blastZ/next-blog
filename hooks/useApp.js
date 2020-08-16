@@ -67,7 +67,7 @@ export const AppProvider = props => {
   return <AppContext.Provider value={value} {...props} />;
 };
 
-export default () => {
+export default function useApp () {
   const context = useContext(AppContext);
 
   if (!context) {

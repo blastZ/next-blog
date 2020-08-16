@@ -4,24 +4,22 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm run build && pm2 startOrRestart ./ecosystem.config.js --env production",
+    "dev": "next dev",
+    "start": "next start",
     "build": "next build",
     "export": "next export",
-    "publish-gh-pages": "next build && next export -o docs && cd docs && touch .nojekyll && touch CNAME && echo 'stackbunch.com' | tee CNAME && cd _next && touch .gitkeep && cd ../ && git init && git remote add origin git@github.com:blastZ/blastz.github.io.git && git add . && git commit -m 'Build' && git push --force origin master",
     "setup": "pm2 deploy production setup",
     "publish": "pm2 deploy production"
   },
   "dependencies": {
-    "@blastz/nico": "^0.6.15",
-    "@material-ui/core": "^4.9.9",
+    "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
-    "@material-ui/styles": "^4.9.6",
-    "@mdx-js/loader": "^1.5.8",
-    "@next/mdx": "^9.3.4",
-    "isomorphic-unfetch": "^3.0.0",
-    "next": "^9.3.4",
+    "@material-ui/styles": "^4.10.0",
+    "@mdx-js/loader": "^1.6.16",
+    "@next/mdx": "^9.5.2",
+    "next": "^9.5.2",
     "next-compose-plugins": "^2.2.0",
-    "prism-react-renderer": "^1.0.2",
+    "prism-react-renderer": "^1.1.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-typography": "^0.16.19",
@@ -29,6 +27,6 @@
     "typography-theme-alton": "^0.16.19"
   },
   "author": "blastz",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {}
 }

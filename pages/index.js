@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useMemo, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
@@ -11,8 +11,13 @@ import PostCard from '../components/PostCard';
 import PageButton from '../components/PageButton';
 import useApp from '../hooks/useApp';
 
-export default ({ posts = [] }) => {
-  const { category, page, pageSize } = useApp();
+export default function HomePage ({ posts = [] })  {
+  const { category, page, pageSize, initApp } = useApp();
+
+  useEffect(() => {
+    initApp(posts);
+  }, [posts, initApp])
+
   const classes = useStyles();
 
   const showPosts = useMemo(() => {

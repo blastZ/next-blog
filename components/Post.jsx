@@ -55,7 +55,7 @@ const components = {
   h1: Title
 };
 
-export default ({ frontMatter, children }) => {
+export default function Post ({ frontMatter, children }) {
   const classes = useStyles();
   const { setCurrentPost } = useApp();
 

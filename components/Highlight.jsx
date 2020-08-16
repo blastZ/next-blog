@@ -1,12 +1,12 @@
-import Highlight, { defaultProps } from 'prism-react-renderer';
+import PrismHighlight, { defaultProps } from 'prism-react-renderer';
 
 import theme from 'prism-react-renderer/themes/vsDark';
 
-export default ({ children, className }) => {
+export default function Highlight ({ children, className }) {
   const language = className.replace(/language-/, '');
 
   return (
-    <Highlight {...defaultProps} code={children} language={language} theme={theme}>
+    <PrismHighlight {...defaultProps} code={children} language={language} theme={theme}>
       {({ className, style, tokens, getLineProps, getTokenProps }) => (
         <pre
           className={className}
@@ -26,6 +26,6 @@ export default ({ children, className }) => {
           ))}
         </pre>
       )}
-    </Highlight>
+    </PrismHighlight>
   );
 };

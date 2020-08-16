@@ -1,3 +1,5 @@
 import Post from '../components/Post';
 
-export default frontMatter => props => <Post frontMatter={frontMatter} {...props} />;
+const usePost = (frontMatter) => (props) => <Post frontMatter={frontMatter} {...props} />;
+
+export default usePost;
