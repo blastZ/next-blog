@@ -14,10 +14,10 @@ const Header = () => {
   const classes = useStyles();
 
   const toggleMenu = useCallback(
-    show => () => {
+    (show) => () => {
       setShowMenu(show);
     },
-    []
+    [],
   );
 
   return (
@@ -46,23 +46,23 @@ const Header = () => {
 
 const useStyles = makeStyles({
   root: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   grow: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   logo: { flexShrink: 0, width: 32, margin: 0, marginRight: 16, marginBottom: -4 },
   appBar: {
     background: 'rgba(255,255,255,1)',
     opacity: 0.98,
     color: '#555',
-    paddingRight: `0px !important`
+    paddingRight: `0px !important`,
   },
   toolBar: {
     padding: '0 24px',
-    minHeight: 56
+    minHeight: 56,
   },
-  button: { padding: 8 }
+  button: { padding: 8 },
 });
 
 export default Header;

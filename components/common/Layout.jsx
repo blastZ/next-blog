@@ -1,12 +1,12 @@
 import Divider from '@material-ui/core/Divider';
 
 import Header from './Header';
-import Main from './Main';
-import Footer from './Footer';
-import AboutMe from './AboutMe';
-import PostBottomButtonGroup from './PostBottomButtonGroup';
+import Main from '../Main';
+import Footer from '../Footer';
+import AboutMe from '../AboutMe';
+import PostBottomButtonGroup from '../PostBottomButtonGroup';
 
-const Layout = props => {
+export default function Layout(props) {
   return (
     <>
       <Header />
@@ -18,6 +18,4 @@ const Layout = props => {
       <Footer />
     </>
   );
-};
-
-export default Layout;
+}

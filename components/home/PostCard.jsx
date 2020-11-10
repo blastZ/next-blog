@@ -9,11 +9,11 @@ import CalendarIcon from '@material-ui/icons/CalendarTodayOutlined';
 import Link from '@material-ui/core/Link';
 import NextLink from 'next/link';
 
-import useApp from '../hooks/useApp';
+import { useSetCurrentCategory } from '../../store';
 
 const PostCard = ({ data: { title, date, tags, slug, subTitle, thumb } }) => {
   const classes = useStyles();
-  const { setCategory } = useApp();
+  const setCategory = useSetCurrentCategory();
 
   return (
     <Card className={classes.card}>
@@ -29,7 +29,7 @@ const PostCard = ({ data: { title, date, tags, slug, subTitle, thumb } }) => {
         <Grid className={classes.infoContainer} container justify="space-between" wrap="nowrap">
           <Grid item>
             IN
-            <Link onClick={setCategory(tags[0])} className={classes.category}>
+            <Link onClick={() => setCategory(tags[0])} className={classes.category}>
               {tags[0].toUpperCase()}
             </Link>
           </Grid>
@@ -51,19 +51,19 @@ const PostCard = ({ data: { title, date, tags, slug, subTitle, thumb } }) => {
   );
 };
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   card: {
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
     height: 480,
     '&:hover': {
-      boxShadow: `0 2px 4px -1px rgba(0,0,0,0.2), 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12)`
+      boxShadow: `0 2px 4px -1px rgba(0,0,0,0.2), 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12)`,
     },
     [theme.breakpoints.up('lg')]: {
       height: 240,
-      flexDirection: 'row'
-    }
+      flexDirection: 'row',
+    },
   },
   cover: {
     width: '100%',
@@ -72,30 +72,30 @@ const useStyles = makeStyles(theme => ({
     cursor: 'pointer',
     transition: 'opacity 0.6s ease',
     '&:hover': {
-      opacity: 0.8
+      opacity: 0.8,
     },
     [theme.breakpoints.up('sm')]: {
-      height: 240
+      height: 240,
     },
     [theme.breakpoints.up('lg')]: {
-      width: 320
-    }
+      width: 320,
+    },
   },
   calendarIcon: {
     fontSize: '1em',
     marginRight: 4,
-    marginBottom: -1
+    marginBottom: -1,
   },
   content: {
-    width: '100%'
+    width: '100%',
   },
   subTitle: {
-    color: '#5f6368'
+    color: '#5f6368',
   },
   readButton: {
     position: 'absolute',
     right: 16,
-    bottom: 16
+    bottom: 16,
   },
   title: {
     whiteSpace: 'nowrap',
@@ -103,22 +103,22 @@ const useStyles = makeStyles(theme => ({
     cursor: 'pointer',
     textUnderlinePosition: 'under',
     '&:hover': {
-      color: '#009688 !important'
-    }
+      color: '#009688 !important',
+    },
   },
   category: {
     cursor: 'pointer',
     color: '#009688',
     marginLeft: 4,
     '&:hover': {
-      color: '#009688 !important'
-    }
+      color: '#009688 !important',
+    },
   },
   infoContainer: {
     fontSize: '0.8em',
     padding: '8px 0px',
-    color: '#999999'
-  }
+    color: '#999999',
+  },
 }));
 
 export default PostCard;

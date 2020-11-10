@@ -1,7 +1,7 @@
-import useApp from '../hooks/useApp';
+import { useCurrentPost } from '../store';
 
-export default function Anchor ({ id }) {
-  const { currentPost } = useApp();
+export default function Anchor({ id }) {
+  const currentPost = useCurrentPost()();
   const { anchors = [] } = currentPost;
 
   return (
@@ -10,4 +10,4 @@ export default function Anchor ({ id }) {
       <h2>{`${+id + 1}.${anchors[id]}`}</h2>
     </div>
   );
-};
+}

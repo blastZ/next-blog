@@ -3,22 +3,24 @@ import { makeStyles } from '@material-ui/core/styles';
 import { MDXProvider } from '@mdx-js/react';
 import Grid from '@material-ui/core/Grid';
 
-import Layout from '../components/Layout';
+import Layout from '../components/common/Layout';
 import Highlight from './Highlight';
-import useApp from '../hooks/useApp';
 
-const Title = props => {
+import { useSetCurrentPost } from '../store';
+
+const Title = (props) => {
   return (
     <h1
       style={{
-        display: 'none'
-      }}>
+        display: 'none',
+      }}
+    >
       {props.children}
     </h1>
   );
 };
 
-const Pre = props => {
+const Pre = (props) => {
   return (
     <div
       style={{
@@ -27,22 +29,24 @@ const Pre = props => {
         paddingLeft: 32,
         borderLeft: '5px solid #38bb6c',
         overflowX: 'auto',
-        margin: '32px 0px'
-      }}>
+        margin: '32px 0px',
+      }}
+    >
       {props.children}
     </div>
   );
 };
 
-const Code = props => {
+const Code = (props) => {
   return (
     <code
       style={{
         fontSize: 16,
         padding: 2,
         fontFamily: 'roboto',
-        color: props.className ? '#06b6ef' : '#ff5700'
-      }}>
+        color: props.className ? '#06b6ef' : '#ff5700',
+      }}
+    >
       {props.children}
     </code>
   );
@@ -52,12 +56,12 @@ const components = {
   pre: Pre,
   code: Highlight,
   inlineCode: Code,
-  h1: Title
+  h1: Title,
 };
 
-export default function Post ({ frontMatter, children }) {
+export default function Post({ frontMatter, children }) {
   const classes = useStyles();
-  const { setCurrentPost } = useApp();
+  const setCurrentPost = useSetCurrentPost();
 
   if (!frontMatter) return <div>No Such File</div>;
 
@@ -65,7 +69,7 @@ export default function Post ({ frontMatter, children }) {
 
   useEffect(() => {
     setCurrentPost(frontMatter);
-  }, [setCurrentPost, frontMatter]);
+  }, [frontMatter]);
 
   return (
     <MDXProvider components={components}>
@@ -85,11 +89,11 @@ export default function Post ({ frontMatter, children }) {
       </Layout>
     </MDXProvider>
   );
-};
+}
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   wrapGrid: {
-    width: '100%'
+    width: '100%',
   },
   container: {
     [theme.breakpoints.down('md')]: {
@@ -97,35 +101,35 @@ const useStyles = makeStyles(theme => ({
       paddingRight: 20,
       marginLeft: 'auto',
       marginRight: 'auto',
-      fontSize: 18
+      fontSize: 18,
     },
     [theme.breakpoints.up('lg')]: {
       width: '70%',
-      marginLeft: '15%'
+      marginLeft: '15%',
     },
-    marginTop: 64
+    marginTop: 64,
   },
   title: {
-    textAlign: 'center'
+    textAlign: 'center',
   },
   subTitle: {
     textAlign: 'center',
     marginTop: 32,
-    fontSize: 20
+    fontSize: 20,
   },
   date: {
-    color: '#777'
+    color: '#777',
   },
   editLink: {
     cursor: 'pointer',
     opacity: 0.7,
     '&:hover': {
       opacity: 1,
-      color: '#ff5700'
-    }
+      color: '#ff5700',
+    },
   },
   content: {
     marginTop: 64,
-    wordWrap: 'break-word'
-  }
+    wordWrap: 'break-word',
+  },
 }));

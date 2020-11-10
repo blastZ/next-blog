@@ -12,21 +12,23 @@ import AppsIcon from '@material-ui/icons/Apps';
 import ReportIcon from '@material-ui/icons/Report';
 import { useRouter } from 'next/router';
 
-import useApp from '../hooks/useApp';
+import { useCategoryList, useCurrentPost, useSetCurrentCategory } from '../../store';
 
-export default ({ toggleMenu: toggle, showMenu: show }) => {
+export default function Menu({ toggleMenu: toggle, showMenu: show }) {
   const classes = useStyles();
   const router = useRouter();
-  const { categories, setCategory } = useApp();
+  const categories = useCategoryList()();
+  const setCategory = useSetCurrentCategory();
+
   const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
 
   const goTo = useCallback(
-    path => () => {
+    (path) => () => {
       router.push(path).then(() => {
         window.scrollTo(0, 0);
       });
     },
-    []
+    [],
   );
 
   const subList = () => {
@@ -62,8 +64,8 @@ export default ({ toggleMenu: toggle, showMenu: show }) => {
   );
 
   const blogList = () =>
-    categories.map(o => (
-      <ListItem onClick={setCategory(o.name)} button key={o.name}>
+    categories.map((o) => (
+      <ListItem onClick={() => setCategory(o.name)} button key={o.name}>
         <ListItemText className={classes.subListItemText} primary={`${o.name}(${o.num})`} />
       </ListItem>
     ));
@@ -75,23 +77,24 @@ export default ({ toggleMenu: toggle, showMenu: show }) => {
       anchor="right"
       open={show}
       onClose={toggle(false)}
-      onOpen={toggle(true)}>
+      onOpen={toggle(true)}
+    >
       {sideList()}
     </SwipeableDrawer>
   );
-};
+}
 
 const postList = () => {
-  const { currentPost } = useApp();
+  const currentPost = useCurrentPost()();
 
   const scrollIntoView = useCallback(
-    id => () => {
+    (id) => () => {
       const ele = document.getElementById(`${id}`);
       if (ele) {
         ele.scrollIntoView();
       }
     },
-    []
+    [],
   );
 
   return (
@@ -104,7 +107,7 @@ const postList = () => {
                 style={{ color: '#009688' }}
                 primaryTypographyProps={{
                   display: 'block',
-                  noWrap: true
+                  noWrap: true,
                 }}
                 onClick={scrollIntoView(index)}
                 primary={o}
@@ -135,12 +138,12 @@ const postList = () => {
 const useStyles = makeStyles({
   text: {
     color: '#009688',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   list: {
-    width: 250
+    width: 250,
   },
   subListItemText: {
-    color: '#009688'
-  }
+    color: '#009688',
+  },
 });

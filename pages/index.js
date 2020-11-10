@@ -1,40 +1,36 @@
-import { useMemo, useEffect } from 'react';
+import { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
 import fs from 'fs';
 import path from 'path';
 
-import Layout from '../components/Layout';
-import PostCard from '../components/PostCard';
-import PageButton from '../components/PageButton';
-import useApp from '../hooks/useApp';
+import Layout from '../components/common/Layout';
+import Posts from '../components/home/Posts';
+import Slogan from '../components/home/Slogan';
 
-export default function HomePage ({ posts = [] })  {
-  const { category, page, pageSize, initApp } = useApp();
+import { useSetCategoryList, useFilteredPostList, useSetPosts, useApp } from '../store';
+
+export default function HomePage({ posts = [], categories = [] }) {
+  const classes = useStyles();
+  const { page, pageSize } = useApp();
+  const setPosts = useSetPosts();
+  const setCategoryList = useSetCategoryList();
+  const showPosts = useFilteredPostList()();
 
   useEffect(() => {
-    initApp(posts);
-  }, [posts, initApp])
+    setPosts(posts);
+  }, [posts]);
 
-  const classes = useStyles();
-
-  const showPosts = useMemo(() => {
-    return posts
-      .filter((o) => (category !== 'all' && o.tags.includes(category)) || category === 'all')
-      .slice(page * pageSize, page * pageSize + pageSize);
-  }, [posts, category, page, pageSize]);
+  useEffect(() => {
+    setCategoryList(categories);
+  }, [categories]);
 
   return (
-    <>
-      <Layout>
-        <Slogan classes={classes} />
-        <Posts classes={classes} showPosts={showPosts} page={page} pageSize={pageSize} />
-      </Layout>
-    </>
+    <Layout>
+      <Slogan classes={classes} />
+      <Posts classes={classes} showPosts={showPosts} page={page} pageSize={pageSize} />
+    </Layout>
   );
-};
+}
 
 export async function getStaticProps() {
   const postNames = fs.readdirSync(path.resolve('./pages/posts'));
@@ -49,39 +45,28 @@ export async function getStaticProps() {
     .filter((o) => o && o.published)
     .sort((a, b) => new Date(b.date) - new Date(a.date));
 
+  const categoriesObj = posts.reduce((result, current) => {
+    current.tags.map((tag) => {
+      result[tag] ? (result[tag] += 1) : (result[tag] = 1);
+    });
+
+    return result;
+  }, {});
+
+  const categories = [{ name: 'all', num: posts.length }].concat(
+    Object.keys(categoriesObj).map((key) => ({
+      name: key,
+      num: categoriesObj[key],
+    })),
+  );
+
   return {
     props: {
       posts,
+      categories,
     },
   };
 }
-
-const Slogan = ({ classes }) => (
-  <Grid className={classes.slogan} item container direction="column" alignItems="center" spacing={3}>
-    <Grid item>
-      <Typography variant="h3">Blog</Typography>
-    </Grid>
-    <Grid item>
-      <Typography variant="h6">{`Share Everything 📖, Front-End, Back-End, Data Visualization, Linux.`}</Typography>
-    </Grid>
-  </Grid>
-);
-
-const Posts = ({ classes, showPosts, page, pageSize }) => (
-  <Grid className={classes.posts} item container wrap="nowrap" direction="column" alignItems="center" spacing={6}>
-    {showPosts.map(({ id, thumb, title, tags, date, subTitle, slug }) => (
-      <Grid key={slug} item>
-        <PostCard id={id} data={{ thumb, title, tags, slug, date, subTitle }} />
-      </Grid>
-    ))}
-    <Grid item>
-      <Divider />
-    </Grid>
-    <Grid item container>
-      <PageButton page={page} pageSize={pageSize} length={showPosts.length} />
-    </Grid>
-  </Grid>
-);
 
 const useStyles = makeStyles((theme) => ({
   slogan: {

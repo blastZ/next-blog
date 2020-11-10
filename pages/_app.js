@@ -1,10 +1,13 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Head from 'next/head';
+import createCache from '@emotion/cache';
 import { ThemeProvider, makeStyles } from '@material-ui/styles';
+import { RecoilRoot } from 'recoil';
 
 import theme from '../src/theme';
 import Progress from '../components/Progress';
-import { AppProvider } from '../hooks/useApp';
+
+export const cache = createCache();
 
 export default function MyApp(props) {
   const { Component, pageProps } = props;
@@ -25,9 +28,9 @@ export default function MyApp(props) {
       </Head>
       <ThemeProvider theme={theme}>
         <Progress />
-        <AppProvider>
+        <RecoilRoot>
           <Component {...pageProps} />
-        </AppProvider>
+        </RecoilRoot>
       </ThemeProvider>
     </>
   );

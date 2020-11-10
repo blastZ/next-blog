@@ -1,3 +1,4 @@
+import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
@@ -5,11 +6,12 @@ import BackIcon from '@material-ui/icons/ArrowBack';
 import ForwardIcon from '@material-ui/icons/ArrowForward';
 import { makeStyles } from '@material-ui/core/styles';
 import { useRouter } from 'next/router';
-import useApp from '../hooks/useApp';
 import Typography from '@material-ui/core/Typography';
 
-export default () => {
-  const { nextPost } = useApp();
+import { useNextPost } from '../store';
+
+export default function PostBottomButtonGroup() {
+  const nextPost = useNextPost()();
   const classes = useStyles();
   const router = useRouter();
   const isPost = router.route.startsWith('/posts/');
@@ -74,20 +76,20 @@ export default () => {
       </ButtonGroup>
     </div>
   );
-};
+}
 
 const useStyles = makeStyles(() => ({
   container: {
-    margin: '88px 0px 64px 0px'
+    margin: '88px 0px 64px 0px',
   },
   backButton: {
     padding: 32,
     borderRadius: 0,
-    borderLeft: 'none !important'
+    borderLeft: 'none !important',
   },
   forwardButton: {
     padding: 32,
     borderRadius: 0,
-    borderRight: 'none !important'
-  }
+    borderRight: 'none !important',
+  },
 }));
