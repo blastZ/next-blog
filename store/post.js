@@ -9,7 +9,7 @@ export const postListState = atom({
 
 export const currentPostState = atom({
   key: 'currentPostState',
-  default: null,
+  default: {},
 });
 
 export const nextPostState = atom({

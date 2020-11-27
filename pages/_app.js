@@ -1,13 +1,10 @@
 import React, { useEffect } from 'react';
 import Head from 'next/head';
-import createCache from '@emotion/cache';
-import { ThemeProvider, makeStyles } from '@material-ui/styles';
+import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
 import { RecoilRoot } from 'recoil';
 
 import theme from '../src/theme';
 import Progress from '../components/Progress';
-
-export const cache = createCache();
 
 export default function MyApp(props) {
   const { Component, pageProps } = props;

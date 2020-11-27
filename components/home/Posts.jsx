@@ -7,9 +7,9 @@ import PageButton from '../PageButton';
 export default function Posts({ classes, showPosts, page, pageSize }) {
   return (
     <Grid className={classes.posts} item container wrap="nowrap" direction="column" alignItems="center" spacing={6}>
-      {showPosts.map(({ id, thumb, title, tags, date, subTitle, slug }) => (
+      {showPosts.map(({ id, thumb, title, tags, createdAt, subTitle, slug }) => (
         <Grid key={slug} item>
-          <PostCard id={id} data={{ thumb, title, tags, slug, date, subTitle }} />
+          <PostCard id={id} data={{ thumb, title, tags, slug, createdAt, subTitle }} />
         </Grid>
       ))}
       <Grid item>

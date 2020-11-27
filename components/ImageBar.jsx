@@ -1,5 +1,5 @@
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
 const ImageBar = ({ slogan = false, title, height = 464, children }) => {
@@ -76,29 +76,29 @@ const Title = ({ text, className }) => (
 const useStyles = makeStyles({
   container: {
     width: '100%',
-    height: props => props.height,
+    height: (props) => props.height,
     padding: '56px 16px',
     background: '#090a0b',
-    position: 'relative'
+    position: 'relative',
   },
   background: {
     position: 'absolute',
     left: 0,
     top: 0,
     width: '100%',
-    height: props => props.height,
-    objectFit: 'cover'
+    height: (props) => props.height,
+    objectFit: 'cover',
   },
   slogan: {
     color: '#fff',
     margin: '16px 0px',
-    zIndex: 1
+    zIndex: 1,
   },
   title: {
     color: '#fff',
     textAlign: 'center',
-    zIndex: 1
-  }
+    zIndex: 1,
+  },
 });
 
 export default ImageBar;

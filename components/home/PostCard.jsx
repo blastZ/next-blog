@@ -11,7 +11,7 @@ import NextLink from 'next/link';
 
 import { useSetCurrentCategory } from '../../store';
 
-const PostCard = ({ data: { title, date, tags, slug, subTitle, thumb } }) => {
+const PostCard = ({ data: { title, createdAt, tags, slug, subTitle, thumb } }) => {
   const classes = useStyles();
   const setCategory = useSetCurrentCategory();
 
@@ -35,7 +35,7 @@ const PostCard = ({ data: { title, date, tags, slug, subTitle, thumb } }) => {
           </Grid>
           <Grid item>
             <CalendarIcon className={classes.calendarIcon} />
-            {date}
+            {createdAt}
           </Grid>
         </Grid>
         <Typography variant="subtitle1" className={classes.subTitle}>

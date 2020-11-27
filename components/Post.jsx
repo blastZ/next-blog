@@ -65,7 +65,7 @@ export default function Post({ frontMatter, children }) {
 
   if (!frontMatter) return <div>No Such File</div>;
 
-  const { title, date, slug } = frontMatter;
+  const { title, createdAt, slug } = frontMatter;
 
   useEffect(() => {
     setCurrentPost(frontMatter);
@@ -78,7 +78,7 @@ export default function Post({ frontMatter, children }) {
           <div className={classes.container}>
             <h1 className={classes.title}>{title}</h1>
             <h4 className={classes.subTitle}>
-              <span className={classes.date}>{`${date} - `}</span>
+              <span className={classes.date}>{`${createdAt} - `}</span>
               <a className={classes.editLink} target="_blank" href={`https://github.com/blastZ/next-blog/blob/master/pages${slug}.mdx`}>
                 EDIT THIS POST ON GITHUB
               </a>

@@ -43,7 +43,7 @@ export async function getStaticProps() {
       return frontMatter;
     })
     .filter((o) => o && o.published)
-    .sort((a, b) => new Date(b.date) - new Date(a.date));
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   const categoriesObj = posts.reduce((result, current) => {
     current.tags.map((tag) => {
