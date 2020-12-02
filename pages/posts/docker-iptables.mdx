@@ -1,0 +1,44 @@
+import Anchor from '../../components/Anchor';
+import usePost from '../../hooks/usePost';
+
+export const frontMatter = {
+    slug: '/posts/docker-iptables',
+    title: 'Docker 和 iptables 的关系',
+    subTitle: '理解 docker 和 iptables 之间的关系，来解释为何修改 iptables 后，容器就无法链接网络了',
+    tags: ['docker'],
+    createdAt: '2020/12/02',
+    updatedAt: '2020/12/02',
+    thumb: '',
+    published: false,
+};
+
+export default usePost(frontMatter);
+
+# Docker 和 iptables
+
+## 防火墙
+
+防火墙就是透过制定一些有顺序的规则，管理进入到我们网域内主机数据封包的一种机制。
+更广义的说，只要能够分析与过滤进出我们管理网域的封包数据，就可以称为防火墙。
+
+## iptables
+
+### 1. 规则（rules）
+
+规则是 iptables 对数据包进行操作的基本单元，即当数据包符合某种条件时，就按照规则执行特定的动作。
+
+规则中一般定义的条件包括，原地址（source），目标地址（destination），和使用的协议（prot），以及对应的动作（target）。
+target 一般有放行（accept），拒绝（reject）和丢弃（drop）等。
+
+配置 iptables 就是增删改这些规则。
+
+### 2.链（chains）
+
+链是数据包传播的路径，每条链中包含若干规则。当一个数据包到达一条链时，iptables 会按照规则顺序，从第一条规则开始往下检查，
+如果有条件匹配的规则，就按照规则定义的动作执行，否则继续检查下一条规则。如果该数据包和链中的所有规则都不匹配，则 iptables 会
+根据该链预先定义的默认策略处理数据包。
+
+### 3.表（tables）
+
+iptables 内置链 4 张表， filter、nat、mangle 和 raw 分别用于包过滤，网络地址转换，包修改和数据跟踪处理等功能。
+每个表中含有若干条链，具体的规则根据实现的目的不同，添加到不同表的不同链中。
